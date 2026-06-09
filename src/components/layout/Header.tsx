@@ -4,18 +4,19 @@ import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import {
   ShoppingCart, User, Search, Menu, X,
-  ChevronDown, Heart, Package, LogOut, Settings
+  Package, LogOut, Settings
 } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { CartDrawer } from "@/components/shop/CartDrawer";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 const categories = [
-  { nameAr: "إلكترونيات", slug: "electronics" },
-  { nameAr: "ملابس رجالية", slug: "mens-clothing" },
-  { nameAr: "ملابس نسائية", slug: "womens-clothing" },
-  { nameAr: "المنزل والمطبخ", slug: "home-kitchen" },
-  { nameAr: "العناية الشخصية", slug: "personal-care" },
-  { nameAr: "الرياضة", slug: "sports" },
+  { nameAr: "كل المنتجات", slug: "" },
+  { nameAr: "ماتشا بودر", slug: "matcha-powder" },
+  { nameAr: "أدوات الماتشا", slug: "matcha-tools" },
+  { nameAr: "مشروبات", slug: "drinks" },
+  { nameAr: "إكسسوارات", slug: "accessories" },
+  { nameAr: "هدايا", slug: "gifts" },
 ];
 
 export function Header() {
@@ -32,33 +33,23 @@ export function Header() {
   return (
     <>
       {/* شريط علوي */}
-      <div className="bg-gray-900 text-white text-sm py-2 hidden md:block">
+      <div className="bg-[#B2DE81] text-[#261B6D] text-sm py-2 hidden md:block">
         <div className="container-custom flex justify-between items-center">
-          <p className="text-gray-300">شحن مجاني للطلبات فوق 200 ريال 🚚</p>
-          <div className="flex items-center gap-4 text-gray-300">
+          <p className="font-semibold text-xs">✦ شحن مجاني للطلبات فوق 200 ريال ✦</p>
+          <div className="flex items-center gap-4 font-medium text-xs">
             <span>📞 920000000</span>
-            <span>|</span>
+            <span className="opacity-50">|</span>
             <span>الرياض، المملكة العربية السعودية</span>
           </div>
         </div>
       </div>
 
       {/* الهيدر الرئيسي */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
-        <div className="container-custom py-4">
+      <header className="sticky top-0 z-50 bg-white shadow-sm border-b-2 border-[#B2DE81]/30">
+        <div className="container-custom py-3.5">
           <div className="flex items-center gap-4">
-            {/* لوجو */}
-            <Link href="/" className="flex-shrink-0">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-yellow-400 rounded-xl flex items-center justify-center shadow-md">
-                  <span className="text-white font-bold text-lg">م</span>
-                </div>
-                <div className="hidden sm:block">
-                  <p className="font-bold text-xl text-gray-900 leading-none">متجر الخير</p>
-                  <p className="text-xs text-orange-500">تسوق بثقة</p>
-                </div>
-              </div>
-            </Link>
+            {/* لوجو MatchaWoob */}
+            <BrandLogo size="md" variant="color" />
 
             {/* البحث */}
             <div className="flex-1 max-w-xl mx-4 hidden md:block">
@@ -67,12 +58,12 @@ export function Header() {
                   <input
                     type="text"
                     name="q"
-                    placeholder="ابحث عن منتجاتك..."
-                    className="w-full border-2 border-orange-400 rounded-xl pr-12 pl-4 py-2.5 text-sm focus:outline-none focus:border-orange-500 bg-orange-50/30"
+                    placeholder="ابحث في عالم الماتشا..."
+                    className="w-full border-2 border-[#B2DE81] rounded-2xl pr-12 pl-4 py-2.5 text-sm focus:outline-none focus:border-[#261B6D] focus:ring-2 focus:ring-[#261B6D]/20 bg-[#F8F7FF] transition-all"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
-                  <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-orange-500">
+                  <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#261B6D]">
                     <Search size={20} />
                   </button>
                 </div>
@@ -85,41 +76,41 @@ export function Header() {
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 p-2.5 rounded-xl hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-2 p-2.5 rounded-2xl hover:bg-[#eeedf8] transition-colors"
                 >
-                  <User size={22} className="text-gray-700" />
+                  <User size={22} className="text-[#261B6D]" />
                   {session?.user ? (
-                    <span className="hidden sm:block text-sm font-medium text-gray-700 max-w-[80px] truncate">
+                    <span className="hidden sm:block text-sm font-medium text-[#261B6D] max-w-[80px] truncate">
                       {session.user.name?.split(" ")[0]}
                     </span>
                   ) : (
-                    <span className="hidden sm:block text-sm text-gray-600">دخول</span>
+                    <span className="hidden sm:block text-sm text-[#261B6D]">دخول</span>
                   )}
                 </button>
 
                 {isUserMenuOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                  <div className="absolute left-0 top-full mt-2 w-56 bg-white rounded-3xl shadow-xl border-2 border-[#eeedf8] py-2 z-50">
                     {session?.user ? (
                       <>
-                        <div className="px-4 py-3 border-b border-gray-100">
-                          <p className="font-semibold text-sm text-gray-900">{session.user.name}</p>
+                        <div className="px-4 py-3 border-b border-[#eeedf8]">
+                          <p className="font-bold text-sm text-[#261B6D]">{session.user.name}</p>
                           <p className="text-xs text-gray-500 mt-0.5">{session.user.email}</p>
                         </div>
-                        <Link href="/account" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                          <User size={16} />
+                        <Link href="/account" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#eeedf8] text-sm text-gray-700 transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                          <User size={16} className="text-[#261B6D]" />
                           حسابي
                         </Link>
-                        <Link href="/orders" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                          <Package size={16} />
+                        <Link href="/orders" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#eeedf8] text-sm text-gray-700 transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                          <Package size={16} className="text-[#261B6D]" />
                           طلباتي
                         </Link>
                         {isAdmin && (
-                          <Link href="/admin" className="flex items-center gap-3 px-4 py-2.5 hover:bg-orange-50 text-sm text-orange-600 font-medium transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                          <Link href="/admin" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#B2DE81]/20 text-sm text-[#261B6D] font-bold transition-colors" onClick={() => setIsUserMenuOpen(false)}>
                             <Settings size={16} />
                             لوحة التحكم
                           </Link>
                         )}
-                        <hr className="my-1 border-gray-100" />
+                        <hr className="my-1 border-[#eeedf8]" />
                         <button
                           onClick={() => { signOut(); setIsUserMenuOpen(false); }}
                           className="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-sm text-red-500 w-full text-right transition-colors"
@@ -130,11 +121,11 @@ export function Header() {
                       </>
                     ) : (
                       <>
-                        <Link href="/login" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                        <Link href="/login" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#eeedf8] text-sm font-medium text-[#261B6D] transition-colors" onClick={() => setIsUserMenuOpen(false)}>
                           تسجيل الدخول
                         </Link>
-                        <Link href="/register" className="flex items-center gap-3 px-4 py-2.5 hover:bg-orange-50 text-sm text-orange-600 font-medium transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                          إنشاء حساب جديد
+                        <Link href="/register" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#B2DE81]/20 text-sm text-[#261B6D] font-bold transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                          إنشاء حساب جديد ✦
                         </Link>
                       </>
                     )}
@@ -145,11 +136,11 @@ export function Header() {
               {/* السلة */}
               <button
                 onClick={openCart}
-                className="relative p-2.5 rounded-xl hover:bg-gray-100 transition-colors"
+                className="relative p-2.5 rounded-2xl hover:bg-[#eeedf8] transition-colors"
               >
-                <ShoppingCart size={22} className="text-gray-700" />
+                <ShoppingCart size={22} className="text-[#261B6D]" />
                 {itemCount > 0 && (
-                  <span className="absolute -top-1 -left-1 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+                  <span className="absolute -top-1 -left-1 bg-[#B2DE81] text-[#261B6D] text-xs font-black w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
                     {itemCount > 9 ? "9+" : itemCount}
                   </span>
                 )}
@@ -158,9 +149,9 @@ export function Header() {
               {/* قائمة الجوال */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors md:hidden"
+                className="p-2.5 rounded-2xl hover:bg-[#eeedf8] transition-colors md:hidden"
               >
-                {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+                {isMenuOpen ? <X size={22} className="text-[#261B6D]" /> : <Menu size={22} className="text-[#261B6D]" />}
               </button>
             </div>
           </div>
@@ -172,10 +163,10 @@ export function Header() {
                 <input
                   type="text"
                   name="q"
-                  placeholder="ابحث عن منتجاتك..."
-                  className="w-full border-2 border-orange-300 rounded-xl pr-10 pl-4 py-2.5 text-sm focus:outline-none focus:border-orange-500 bg-orange-50/30"
+                  placeholder="ابحث في عالم الماتشا..."
+                  className="w-full border-2 border-[#B2DE81] rounded-2xl pr-10 pl-4 py-2.5 text-sm focus:outline-none focus:border-[#261B6D] bg-[#F8F7FF]"
                 />
-                <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-orange-500">
+                <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#261B6D]">
                   <Search size={18} />
                 </button>
               </div>
@@ -184,27 +175,22 @@ export function Header() {
         </div>
 
         {/* شريط التصنيفات */}
-        <nav className="border-t border-gray-100 hidden md:block">
+        <nav className="border-t border-[#eeedf8] hidden md:block bg-[#F8F7FF]/50">
           <div className="container-custom">
             <ul className="flex items-center gap-1 py-2 overflow-x-auto scrollbar-hide">
-              <li>
-                <Link href="/products" className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition-colors whitespace-nowrap">
-                  جميع المنتجات
-                </Link>
-              </li>
               {categories.map((cat) => (
                 <li key={cat.slug}>
                   <Link
-                    href={`/products?category=${cat.slug}`}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition-colors whitespace-nowrap"
+                    href={cat.slug ? `/products?category=${cat.slug}` : "/products"}
+                    className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#261B6D] hover:bg-[#B2DE81]/20 rounded-xl transition-colors whitespace-nowrap"
                   >
                     {cat.nameAr}
                   </Link>
                 </li>
               ))}
               <li className="mr-auto">
-                <Link href="/products?sale=true" className="px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-50 rounded-lg transition-colors whitespace-nowrap">
-                  🔥 العروض
+                <Link href="/products?sale=true" className="px-4 py-2 text-sm font-bold text-[#261B6D] hover:bg-[#B2DE81]/30 rounded-xl transition-colors whitespace-nowrap flex items-center gap-1">
+                  ✦ العروض الحصرية
                 </Link>
               </li>
             </ul>
@@ -213,18 +199,25 @@ export function Header() {
 
         {/* قائمة الجوال */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white">
+          <div className="md:hidden border-t border-[#eeedf8] bg-white">
             <nav className="container-custom py-4">
               <ul className="space-y-1">
-                <li><Link href="/products" className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-orange-50 rounded-xl" onClick={() => setIsMenuOpen(false)}>جميع المنتجات</Link></li>
                 {categories.map((cat) => (
                   <li key={cat.slug}>
-                    <Link href={`/products?category=${cat.slug}`} className="block px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 rounded-xl" onClick={() => setIsMenuOpen(false)}>
+                    <Link
+                      href={cat.slug ? `/products?category=${cat.slug}` : "/products"}
+                      className="block px-4 py-3 text-sm font-medium text-[#261B6D] hover:bg-[#B2DE81]/20 rounded-2xl"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
                       {cat.nameAr}
                     </Link>
                   </li>
                 ))}
-                <li><Link href="/products?sale=true" className="block px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl" onClick={() => setIsMenuOpen(false)}>🔥 العروض</Link></li>
+                <li>
+                  <Link href="/products?sale=true" className="block px-4 py-3 text-sm font-bold text-[#261B6D] hover:bg-[#B2DE81]/20 rounded-2xl" onClick={() => setIsMenuOpen(false)}>
+                    ✦ العروض الحصرية
+                  </Link>
+                </li>
               </ul>
             </nav>
           </div>

@@ -35,20 +35,14 @@ export function ProductCard({
       id, nameAr, price, salePrice,
       mainImage, stock, slug,
     });
-    toast.success(`تمت إضافة "${nameAr}" للسلة`, {
-      icon: "🛒",
-      style: {
-        background: "#1f2937",
-        color: "#fff",
-      },
-    });
+    toast.success(`تمت إضافة "${nameAr}" للسلة 🍵`);
     openCart();
   };
 
   return (
     <Link href={`/products/${slug}`} className="product-card block">
       {/* صورة المنتج */}
-      <div className="relative overflow-hidden bg-gray-100 aspect-square">
+      <div className="relative overflow-hidden bg-[#eeedf8] aspect-square">
         {mainImage ? (
           <Image
             src={mainImage}
@@ -58,8 +52,8 @@ export function ProductCard({
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-6xl text-gray-300">
-            📦
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-7xl opacity-60">🍵</span>
           </div>
         )}
 
@@ -69,10 +63,10 @@ export function ProductCard({
             <span className="badge-sale shadow-sm">-{discountPercent}%</span>
           )}
           {isNew && !discountPercent && (
-            <span className="badge-new shadow-sm">جديد</span>
+            <span className="badge-new shadow-sm">✦ جديد</span>
           )}
           {stock === 0 && (
-            <span className="badge bg-gray-600 text-white shadow-sm">نفذ المخزون</span>
+            <span className="badge bg-gray-500 text-white shadow-sm">نفذ المخزون</span>
           )}
         </div>
 
@@ -89,7 +83,7 @@ export function ProductCard({
           <button
             onClick={handleAddToCart}
             disabled={stock === 0}
-            className="w-full bg-gray-900 hover:bg-orange-500 disabled:bg-gray-400 text-white text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors"
+            className="w-full bg-[#261B6D] hover:bg-[#B2DE81] hover:text-[#261B6D] disabled:bg-gray-400 text-white text-sm font-bold py-2.5 rounded-2xl flex items-center justify-center gap-2 transition-all"
           >
             <ShoppingCart size={16} />
             {stock === 0 ? "نفذ المخزون" : "أضف للسلة"}
@@ -100,16 +94,16 @@ export function ProductCard({
       {/* تفاصيل المنتج */}
       <div className="p-4">
         {categoryName && (
-          <p className="text-xs text-orange-500 font-medium mb-1">{categoryName}</p>
+          <p className="text-xs text-[#261B6D]/60 font-medium mb-1">{categoryName}</p>
         )}
-        <h3 className="font-semibold text-gray-900 text-sm leading-relaxed line-clamp-2 mb-2 group-hover:text-orange-500 transition-colors">
+        <h3 className="font-semibold text-gray-900 text-sm leading-relaxed line-clamp-2 mb-2 group-hover:text-[#261B6D] transition-colors">
           {nameAr}
         </h3>
 
         {/* التقييم */}
         <div className="flex items-center gap-1 mb-2">
           {[...Array(5)].map((_, i) => (
-            <Star key={i} size={12} className={i < 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-300"} />
+            <Star key={i} size={12} className={i < 4 ? "fill-[#B2DE81] text-[#B2DE81]" : "text-gray-300"} />
           ))}
           <span className="text-xs text-gray-500 mr-1">(24)</span>
         </div>
@@ -117,7 +111,7 @@ export function ProductCard({
         {/* السعر */}
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-2">
-            <span className="text-lg font-bold text-orange-500">{formatPrice(displayPrice)}</span>
+            <span className="text-lg font-black text-[#261B6D]">{formatPrice(displayPrice)}</span>
             {salePrice && (
               <span className="text-sm text-gray-400 line-through">{formatPrice(price)}</span>
             )}

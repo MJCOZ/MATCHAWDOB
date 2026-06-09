@@ -4,21 +4,29 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --primary: 24 95% 53%;      /* البرتقالي الذهبي */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 217 91% 15%;   /* الأزرق الداكن */
-    --secondary-foreground: 0 0% 100%;
-    --accent: 142 76% 36%;      /* الأخضر */
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --border: 214.3 31.8% 91.4%;
-    --radius: 0.75rem;
+    --background: 248 247 255;
+    --foreground: 17 24 39;
+    --primary: 248 27 109 / 0%;      /* Navy #261B6D */
+    --primary-foreground: 255 255 255;
+    --secondary: 178 222 129;        /* Matcha Green #B2DE81 */
+    --secondary-foreground: 38 27 109;
+    --accent: 178 222 129;
+    --muted: 238 237 248;
+    --muted-foreground: 107 114 128;
+    --border: 209 207 237;
+    --radius: 1rem;
+
+    /* MatchaWoob Brand Colors */
+    --navy: #261B6D;
+    --navy-dark: #1a1250;
+    --navy-light: #352a8a;
+    --green: #B2DE81;
+    --green-dark: #8fc455;
+    --green-light: #d4f0a8;
   }
 
   * {
-    @apply border-border;
+    @apply border-[#d1cfe5];
   }
 
   html {
@@ -26,28 +34,32 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#F8F7FF] text-gray-900;
     font-family: var(--font-cairo), 'Cairo', sans-serif;
   }
 }
 
 @layer components {
-  /* أزرار */
+  /* أزرار Brand */
   .btn-primary {
-    @apply bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-95;
+    @apply bg-[#261B6D] hover:bg-[#1a1250] text-white font-semibold py-2.5 px-6 rounded-2xl transition-all duration-200 shadow-sm hover:shadow-lg hover:shadow-[#261B6D]/30 active:scale-95;
   }
 
   .btn-secondary {
-    @apply bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-200;
+    @apply bg-[#B2DE81] hover:bg-[#8fc455] text-[#261B6D] font-bold py-2.5 px-6 rounded-2xl transition-all duration-200 shadow-sm;
   }
 
   .btn-outline {
-    @apply border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-200;
+    @apply border-2 border-[#261B6D] text-[#261B6D] hover:bg-[#261B6D] hover:text-white font-semibold py-2.5 px-6 rounded-2xl transition-all duration-200;
+  }
+
+  .btn-green {
+    @apply bg-[#B2DE81] hover:bg-[#8fc455] text-[#261B6D] font-bold py-2.5 px-6 rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-95;
   }
 
   /* بطاقة منتج */
   .product-card {
-    @apply bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group border border-gray-100;
+    @apply bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group border border-[#e8e6f5];
   }
 
   /* حاوية */
@@ -65,28 +77,52 @@
   }
 
   .badge-new {
-    @apply badge bg-green-500 text-white;
+    @apply badge bg-[#B2DE81] text-[#261B6D];
   }
 
   /* مدخل */
   .input-field {
-    @apply w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all;
+    @apply w-full border-2 border-[#d1cfe5] rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#261B6D]/40 focus:border-[#261B6D] transition-all bg-white;
   }
 
   /* بطاقة */
   .card {
-    @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-6;
+    @apply bg-white rounded-3xl shadow-sm border border-[#e8e6f5] p-6;
+  }
+
+  /* Brand heading font */
+  .font-brand {
+    font-family: var(--font-fredoka), 'Fredoka One', cursive;
+    letter-spacing: 0.02em;
+  }
+
+  /* نجوم الزينة */
+  .sparkle {
+    @apply inline-block text-[#B2DE81] animate-sparkle;
+  }
+
+  /* بطاقة MatchaWoob */
+  .matcha-card {
+    @apply bg-white rounded-3xl border-2 border-[#e8e6f5] hover:border-[#B2DE81] transition-all duration-300 overflow-hidden;
   }
 }
 
 @layer utilities {
   /* تأثيرات */
   .text-gradient {
-    @apply bg-gradient-to-r from-orange-500 to-yellow-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-[#261B6D] to-[#352a8a] bg-clip-text text-transparent;
+  }
+
+  .text-gradient-green {
+    @apply bg-gradient-to-r from-[#8fc455] to-[#B2DE81] bg-clip-text text-transparent;
   }
 
   .glass {
     @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
+
+  .glass-navy {
+    @apply bg-[#261B6D]/80 backdrop-blur-md border border-[#261B6D]/20;
   }
 
   /* تمرير أفقي */
@@ -102,6 +138,14 @@
   .text-ar-xs { @apply text-sm leading-relaxed; }
   .text-ar-sm { @apply text-base leading-relaxed; }
   .text-ar-lg { @apply text-xl leading-relaxed; }
+
+  /* تأثير التألق */
+  .glow-navy {
+    box-shadow: 0 0 30px rgba(38, 27, 109, 0.3);
+  }
+  .glow-green {
+    box-shadow: 0 0 30px rgba(178, 222, 129, 0.4);
+  }
 }
 
 /* تأثير الانتقال للصفحة */
@@ -123,7 +167,7 @@
 /* شريط التحميل */
 .loading-bar {
   height: 3px;
-  background: linear-gradient(90deg, #f97316, #facc15, #f97316);
+  background: linear-gradient(90deg, #261B6D, #B2DE81, #261B6D);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
 }
@@ -131,4 +175,58 @@
 @keyframes loading {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+/* طفو الشخصيات */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* النجوم البراقة */
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  50% { opacity: 0.6; transform: scale(0.85) rotate(20deg); }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* الموجة الخضراء */
+.wavy-divider {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 80'%3E%3Cpath d='M0,40 C200,80 400,0 600,40 C800,80 1000,0 1200,40 L1200,80 L0,80 Z' fill='%23B2DE81'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.wavy-divider-top {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 80'%3E%3Cpath d='M0,40 C200,0 400,80 600,40 C800,0 1000,80 1200,40 L1200,0 L0,0 Z' fill='%23B2DE81'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* نمط نجوم الخلفية */
+.stars-pattern {
+  background-image:
+    radial-gradient(circle, rgba(178, 222, 129, 0.15) 1px, transparent 1px),
+    radial-gradient(circle, rgba(178, 222, 129, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px, 60px 60px;
+  background-position: 0 0, 15px 15px;
+}
+
+/* نجمة متألقة */
+.star-decoration::before {
+  content: "✦";
+  color: #B2DE81;
+  font-size: 1.2em;
+}
+
+/* Admin sidebar brand */
+.admin-sidebar {
+  background: linear-gradient(160deg, #261B6D 0%, #1a1250 100%);
 }

@@ -9,15 +9,15 @@ const features = [
 
 export function FeaturesBar() {
   return (
-    <div className="bg-orange-500">
+    <div className="bg-[#B2DE81]">
       <div className="container-custom py-3">
         <div className="flex items-center justify-between gap-4 overflow-x-auto scrollbar-hide">
           {features.map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="flex items-center gap-2.5 flex-shrink-0 text-white">
-              <Icon size={20} className="text-orange-100" />
+            <div key={title} className="flex items-center gap-2.5 flex-shrink-0 text-[#261B6D]">
+              <Icon size={20} className="text-[#261B6D]/70 flex-shrink-0" />
               <div>
                 <p className="text-xs font-bold">{title}</p>
-                <p className="text-xs text-orange-100 hidden sm:block">{desc}</p>
+                <p className="text-xs text-[#261B6D]/70 hidden sm:block">{desc}</p>
               </div>
             </div>
           ))}

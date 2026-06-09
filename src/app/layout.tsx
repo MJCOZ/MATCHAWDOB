@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cairo } from "next/font/google";
+import { Cairo, Fredoka } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "react-hot-toast";
@@ -10,25 +10,32 @@ const cairo = Cairo({
   variable: "--font-cairo",
 });
 
+const fredoka = Fredoka({
+  weight: ["400", "600"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-fredoka",
+});
+
 export const metadata: Metadata = {
   title: {
-    default: "متجر الخير - تسوق بثقة",
-    template: "%s | متجر الخير",
+    default: "MatchaWoob - متجر الماتشا والدب",
+    template: "%s | MatchaWoob",
   },
-  description: "متجر إلكتروني سعودي احترافي - أفضل المنتجات بأسعار منافسة مع توصيل سريع",
-  keywords: ["متجر إلكتروني", "تسوق أونلاين", "السعودية", "تسوق سعودي"],
-  authors: [{ name: "متجر الخير" }],
+  description: "متجر MatchaWoob - عالم الماتشا الياباني والشخصيات الكيوت. تسوق أفضل منتجات الماتشا مع شحن سريع لجميع مناطق المملكة",
+  keywords: ["ماتشا", "MatchaWoob", "متجر ياباني", "شاي ماتشا", "تسوق سعودي"],
+  authors: [{ name: "MatchaWoob" }],
   openGraph: {
     type: "website",
     locale: "ar_SA",
-    siteName: "متجر الخير",
+    siteName: "MatchaWoob",
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ar" dir="rtl" className={cairo.variable}>
-      <body className={`${cairo.className} bg-gray-50 text-gray-900 antialiased`}>
+    <html lang="ar" dir="rtl" className={`${cairo.variable} ${fredoka.variable}`}>
+      <body className={`${cairo.className} bg-[#F8F7FF] text-gray-900 antialiased`}>
         <Providers>
           {children}
           <Toaster
@@ -38,6 +45,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               style: {
                 fontFamily: "var(--font-cairo)",
                 direction: "rtl",
+                background: "#261B6D",
+                color: "#fff",
+                borderRadius: "16px",
               },
             }}
           />

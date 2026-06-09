@@ -31,28 +31,30 @@ export default async function AdminDashboard() {
       title: "إجمالي الطلبات",
       value: totalOrders.toLocaleString("ar-SA"),
       icon: ShoppingBag,
-      color: "bg-blue-500",
+      color: "bg-[#261B6D]",
       href: "/admin/orders",
     },
     {
       title: "إجمالي الإيرادات",
       value: formatPrice(Number(totalRevenue._sum.total) || 0),
       icon: TrendingUp,
-      color: "bg-green-500",
+      color: "bg-[#B2DE81]",
+      iconColor: "text-[#261B6D]",
       href: "/admin/orders",
     },
     {
       title: "المنتجات النشطة",
       value: totalProducts.toLocaleString("ar-SA"),
       icon: Package,
-      color: "bg-orange-500",
+      color: "bg-[#352a8a]",
       href: "/admin/products",
     },
     {
       title: "العملاء",
       value: totalUsers.toLocaleString("ar-SA"),
       icon: Users,
-      color: "bg-purple-500",
+      color: "bg-[#8fc455]",
+      iconColor: "text-[#261B6D]",
       href: "/admin/users",
     },
   ];
@@ -79,8 +81,8 @@ export default async function AdminDashboard() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black text-gray-900">لوحة التحكم</h1>
-          <p className="text-gray-500 text-sm mt-0.5">مرحباً بك، هذه نظرة عامة على متجرك</p>
+          <h1 className="text-2xl font-black text-[#261B6D]">لوحة التحكم ✦</h1>
+          <p className="text-gray-500 text-sm mt-0.5">مرحباً بك في عالم MatchaWoob</p>
         </div>
         {pendingOrders > 0 && (
           <Link href="/admin/orders?status=PENDING" className="flex items-center gap-2 bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-yellow-100 transition-colors">
@@ -92,14 +94,14 @@ export default async function AdminDashboard() {
 
       {/* الإحصائيات */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map(({ title, value, icon: Icon, color, href }) => (
-          <Link key={title} href={href} className="bg-white rounded-2xl p-5 border border-gray-100 hover:shadow-md transition-shadow">
+        {stats.map(({ title, value, icon: Icon, color, href, iconColor }: any) => (
+          <Link key={title} href={href} className="bg-white rounded-3xl p-5 border-2 border-[#eeedf8] hover:border-[#B2DE81] hover:shadow-lg transition-all">
             <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 ${color} rounded-xl flex items-center justify-center`}>
-                <Icon size={24} className="text-white" />
+              <div className={`w-12 h-12 ${color} rounded-2xl flex items-center justify-center`}>
+                <Icon size={24} className={iconColor || "text-white"} />
               </div>
             </div>
-            <p className="text-2xl font-black text-gray-900">{value}</p>
+            <p className="text-2xl font-black text-[#261B6D]">{value}</p>
             <p className="text-sm text-gray-500 mt-1">{title}</p>
           </Link>
         ))}
@@ -107,10 +109,10 @@ export default async function AdminDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* آخر الطلبات */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          <div className="flex items-center justify-between p-5 border-b border-gray-100">
-            <h2 className="font-bold text-gray-900">آخر الطلبات</h2>
-            <Link href="/admin/orders" className="text-orange-500 hover:text-orange-600 text-sm font-medium">
+        <div className="lg:col-span-2 bg-white rounded-3xl border-2 border-[#eeedf8] overflow-hidden">
+          <div className="flex items-center justify-between p-5 border-b border-[#eeedf8]">
+            <h2 className="font-bold text-[#261B6D]">آخر الطلبات</h2>
+            <Link href="/admin/orders" className="text-[#261B6D] hover:text-[#352a8a] text-sm font-bold border-2 border-[#261B6D]/20 hover:border-[#261B6D] px-3 py-1 rounded-xl transition-all">
               عرض الكل
             </Link>
           </div>
@@ -128,7 +130,7 @@ export default async function AdminDashboard() {
                 {recentOrders.map((order) => (
                   <tr key={order.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                     <td className="px-5 py-3">
-                      <Link href={`/admin/orders/${order.id}`} className="text-sm font-bold text-orange-500 hover:text-orange-600">
+                      <Link href={`/admin/orders/${order.id}`} className="text-sm font-bold text-[#261B6D] hover:text-[#352a8a]">
                         #{order.orderNumber}
                       </Link>
                     </td>
@@ -152,10 +154,10 @@ export default async function AdminDashboard() {
         </div>
 
         {/* منتجات مخزونها منخفض */}
-        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          <div className="flex items-center justify-between p-5 border-b border-gray-100">
-            <h2 className="font-bold text-gray-900">تنبيهات المخزون</h2>
-            <Link href="/admin/products?lowStock=true" className="text-orange-500 hover:text-orange-600 text-sm font-medium">
+        <div className="bg-white rounded-3xl border-2 border-[#eeedf8] overflow-hidden">
+          <div className="flex items-center justify-between p-5 border-b border-[#eeedf8]">
+            <h2 className="font-bold text-[#261B6D]">تنبيهات المخزون</h2>
+            <Link href="/admin/products?lowStock=true" className="text-[#261B6D] hover:text-[#352a8a] text-sm font-bold border-2 border-[#261B6D]/20 hover:border-[#261B6D] px-3 py-1 rounded-xl transition-all">
               عرض الكل
             </Link>
           </div>

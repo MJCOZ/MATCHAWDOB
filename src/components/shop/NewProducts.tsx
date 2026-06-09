@@ -19,10 +19,13 @@ export function NewProducts({ products }: { products: Product[] }) {
     <section className="container-custom py-14">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-2xl md:text-3xl font-black text-gray-900">وصل حديثاً ✨</h2>
-          <p className="text-gray-500 text-sm mt-1">أحدث المنتجات في متجرنا</p>
+          <p className="text-[#B2DE81] font-bold text-sm mb-1 flex items-center gap-1">
+            <span>✦</span> وصل حديثاً
+          </p>
+          <h2 className="text-2xl md:text-3xl font-black text-[#261B6D]">منتجات جديدة</h2>
+          <p className="text-gray-500 text-sm mt-1">أحدث ما وصلنا من عالم الماتشا</p>
         </div>
-        <Link href="/products?new=true" className="text-orange-500 hover:text-orange-600 text-sm font-semibold">
+        <Link href="/products?new=true" className="text-[#261B6D] hover:text-[#352a8a] text-sm font-bold flex items-center gap-1 border-2 border-[#261B6D]/20 hover:border-[#261B6D] px-4 py-2 rounded-2xl transition-all">
           عرض الكل ←
         </Link>
       </div>
