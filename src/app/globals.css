@@ -43,7 +43,7 @@
 
   body {
     @apply bg-[#F8F7FF] text-gray-900;
-    font-family: var(--font-cairo), 'Cairo', sans-serif;
+    font-family: 'AraHamahHoms', sans-serif;
   }
 }
 
@@ -100,7 +100,7 @@
 
   /* Brand heading font */
   .font-brand {
-    font-family: var(--font-fredoka), 'Fredoka One', cursive;
+    font-family: 'AraHamahHoms', sans-serif;
     letter-spacing: 0.02em;
   }
 
