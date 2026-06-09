@@ -1,12 +1,13 @@
 "use client";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff, Loader2, ShoppingBag } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
@@ -29,7 +30,7 @@ export default function LoginPage() {
         return;
       }
 
-      toast.success("تم تسجيل الدخول بنجاح!");
+      toast.success("أهلاً بك في MatchaWoob ✦");
       router.push(callbackUrl);
       router.refresh();
     } finally {
@@ -38,24 +39,21 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-[#261B6D] flex items-center justify-center p-4 relative overflow-hidden">
+      {/* نجوم خلفية */}
+      <div className="absolute inset-0 stars-pattern opacity-20" />
+      <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#B2DE81]/5 blur-3xl" />
+      <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[#B2DE81]/5 blur-3xl" />
+
+      <div className="w-full max-w-md relative z-10">
         {/* الشعار */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3">
-            <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-yellow-400 rounded-2xl flex items-center justify-center shadow-xl">
-              <span className="text-white font-black text-2xl">م</span>
-            </div>
-            <div className="text-right">
-              <p className="font-black text-2xl text-white">متجر الخير</p>
-              <p className="text-sm text-orange-400">تسوق بثقة</p>
-            </div>
-          </Link>
+        <div className="flex justify-center mb-8">
+          <BrandLogo size="lg" variant="light" />
         </div>
 
         {/* بطاقة تسجيل الدخول */}
         <div className="bg-white rounded-3xl shadow-2xl p-8">
-          <h1 className="text-2xl font-black text-gray-900 mb-1">تسجيل الدخول</h1>
+          <h1 className="text-2xl font-black text-[#261B6D] mb-1">تسجيل الدخول</h1>
           <p className="text-gray-500 text-sm mb-6">أدخل بيانات حسابك للمتابعة</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -82,14 +80,14 @@ export default function LoginPage() {
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                 />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#261B6D]">
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
 
             <div className="flex items-center justify-end">
-              <Link href="/forgot-password" className="text-sm text-orange-500 hover:text-orange-600">
+              <Link href="/forgot-password" className="text-sm text-[#261B6D]/60 hover:text-[#261B6D]">
                 نسيت كلمة المرور؟
               </Link>
             </div>
@@ -99,26 +97,38 @@ export default function LoginPage() {
               disabled={isLoading}
               className="btn-primary w-full py-4 text-base flex items-center justify-center gap-2 disabled:opacity-70"
             >
-              {isLoading ? <><Loader2 size={18} className="animate-spin" />جاري التحقق...</> : "تسجيل الدخول"}
+              {isLoading ? <><Loader2 size={18} className="animate-spin" />جاري التحقق...</> : "تسجيل الدخول ✦"}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">
               ليس لديك حساب؟{" "}
-              <Link href="/register" className="text-orange-500 hover:text-orange-600 font-semibold">
+              <Link href="/register" className="text-[#261B6D] hover:text-[#352a8a] font-bold">
                 إنشاء حساب جديد
               </Link>
             </p>
           </div>
         </div>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
-          <Link href="/" className="hover:text-gray-300 transition-colors">
+        <p className="text-center text-sm text-[#B2DE81]/60 mt-6">
+          <Link href="/" className="hover:text-[#B2DE81] transition-colors">
             ← العودة للمتجر
           </Link>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#261B6D] flex items-center justify-center">
+        <div className="text-[#B2DE81] text-lg">جاري التحميل...</div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -59,7 +59,7 @@
 
   /* بطاقة منتج */
   .product-card {
-    @apply bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group border border-[#e8e6f5];
+    @apply bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-[#e8e6f5];
   }
 
   /* حاوية */
