@@ -20,8 +20,9 @@ export function Footer() {
               <div className="mb-5">
                 <BrandLogo size="md" variant="light" />
               </div>
+              <p className="text-[#B2DE81] text-sm font-bold mb-1">ماتشا من الفضاء ✦</p>
               <p className="text-[#B2DE81]/80 text-sm leading-relaxed">
-                متجرك الياباني المميز في المملكة العربية السعودية. ماتشا أصيل، شخصيات كيوت، وتجربة تسوق مختلفة تماماً ✦
+                متجرك الياباني المميز في المملكة العربية السعودية. ماتشا أصيل، شخصيات كيوت، وتجربة تسوق مختلفة تماماً
               </p>
               <div className="flex items-center gap-3 mt-5">
                 <a

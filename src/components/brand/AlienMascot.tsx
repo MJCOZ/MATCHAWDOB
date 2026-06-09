@@ -4,84 +4,79 @@ interface AlienMascotProps {
   animate?: boolean;
 }
 
-export function AlienMascot({ size = 140, className = "", animate = true }: AlienMascotProps) {
+export function AlienMascot({ size = 180, className = "", animate = true }: AlienMascotProps) {
   return (
     <svg
       width={size}
-      height={size}
-      viewBox="0 0 180 220"
+      height={Math.round(size * 1.15)}
+      viewBox="0 0 180 210"
       xmlns="http://www.w3.org/2000/svg"
       className={`${animate ? "animate-float" : ""} ${className}`}
       style={{
-        filter: "drop-shadow(0 8px 16px rgba(178, 222, 129, 0.35))",
-        animationDelay: "1s",
+        animationDelay: "0.8s",
+        filter: "drop-shadow(0 10px 20px rgba(38,27,109,0.3))",
       }}
     >
       {/* ظل */}
-      <ellipse cx="90" cy="215" rx="42" ry="7" fill="rgba(178,222,129,0.2)" />
+      <ellipse cx="90" cy="205" rx="40" ry="5" fill="rgba(38,27,109,0.15)" />
 
-      {/* هالة كونية */}
-      <circle cx="90" cy="80" r="70" fill="rgba(178,222,129,0.06)" />
+      {/* الجسم - بدلة فضائية بيضاء */}
+      <ellipse cx="90" cy="158" rx="42" ry="50" fill="#f5f5f5" />
+      <ellipse cx="90" cy="168" rx="26" ry="32" fill="#ffffff" />
 
-      {/* الجسم - قميص أبيض */}
-      <ellipse cx="90" cy="158" rx="42" ry="50" fill="white" />
-      <ellipse cx="90" cy="148" rx="36" ry="42" fill="#f0f0f0" />
+      {/* حزام البدلة */}
+      <rect x="66" y="162" width="48" height="10" rx="5" fill="#d1d5db" />
+      {/* كاميرا على الحزام */}
+      <rect x="82" y="164" width="16" height="10" rx="3" fill="#6b7280" />
+      <circle cx="90" cy="169" r="4" fill="#374151" />
+      <circle cx="90" cy="169" r="2" fill="#1a1a2e" />
 
-      {/* زر القميص */}
-      <circle cx="90" cy="138" r="3" fill="#d1d5db" />
-      <circle cx="90" cy="150" r="3" fill="#d1d5db" />
-      <circle cx="90" cy="162" r="3" fill="#d1d5db" />
+      {/* الساقان */}
+      <ellipse cx="70" cy="198" rx="15" ry="10" fill="#e5e7eb" />
+      <ellipse cx="110" cy="198" rx="15" ry="10" fill="#e5e7eb" />
+      {/* قدم خضراء */}
+      <ellipse cx="70" cy="204" rx="18" ry="7" fill="#B2DE81" />
+      <ellipse cx="110" cy="204" rx="18" ry="7" fill="#B2DE81" />
 
-      {/* ذراعان */}
-      <ellipse cx="50" cy="148" rx="14" ry="24" fill="#B2DE81" transform="rotate(-10 50 148)" />
-      <ellipse cx="130" cy="148" rx="14" ry="24" fill="#B2DE81" transform="rotate(10 130 148)" />
-      {/* يدان */}
-      <circle cx="43" cy="168" r="11" fill="#8fc455" />
-      <circle cx="137" cy="168" r="11" fill="#8fc455" />
+      {/* ذراع يسار مرفوع للتلويح */}
+      <ellipse cx="46" cy="133" rx="12" ry="26" fill="#e5e7eb" transform="rotate(-38 46 133)" />
+      {/* كف خضراء */}
+      <circle cx="28" cy="114" r="14" fill="#B2DE81" />
+      <ellipse cx="20" cy="103" rx="5" ry="8" fill="#8fc455" transform="rotate(-20 20 103)" />
+      <ellipse cx="28" cy="100" rx="5" ry="9" fill="#8fc455" />
+      <ellipse cx="36" cy="103" rx="5" ry="8" fill="#8fc455" transform="rotate(20 36 103)" />
 
-      {/* الرأس الكروي الأخضر */}
-      <ellipse cx="90" cy="78" rx="52" ry="60" fill="#B2DE81" />
-      <ellipse cx="90" cy="70" rx="46" ry="52" fill="#c8e9a0" />
+      {/* ذراع يمين */}
+      <ellipse cx="134" cy="148" rx="12" ry="26" fill="#e5e7eb" transform="rotate(12 134 148)" />
+      <circle cx="144" cy="170" r="12" fill="#B2DE81" />
 
-      {/* قرون الهوائي */}
-      <line x1="68" y1="22" x2="58" y2="5" stroke="#8fc455" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="57" cy="4" r="5" fill="#261B6D" />
-      <line x1="112" y1="22" x2="122" y2="5" stroke="#8fc455" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="123" cy="4" r="5" fill="#261B6D" />
+      {/* الرأس الأخضر */}
+      <ellipse cx="90" cy="80" rx="52" ry="58" fill="#B2DE81" />
+      <ellipse cx="90" cy="72" rx="46" ry="50" fill="#c8e9a0" />
 
-      {/* عينان كبيرتان - كيوت كونية */}
-      <ellipse cx="73" cy="72" rx="17" ry="20" fill="#261B6D" />
-      <ellipse cx="107" cy="72" rx="17" ry="20" fill="#261B6D" />
-      {/* لمعة */}
-      <circle cx="78" cy="64" r="5" fill="white" />
-      <circle cx="112" cy="64" r="5" fill="white" />
-      <circle cx="72" cy="76" r="2.5" fill="white" opacity="0.5" />
-      <circle cx="106" cy="76" r="2.5" fill="white" opacity="0.5" />
-      {/* قزحية */}
-      <circle cx="76" cy="70" r="9" fill="rgba(38,27,109,0.5)" />
-      <circle cx="110" cy="70" r="9" fill="rgba(38,27,109,0.5)" />
+      {/* قرنان صغيران */}
+      <ellipse cx="68" cy="28" rx="7" ry="14" fill="#8fc455" transform="rotate(-15 68 28)" />
+      <ellipse cx="112" cy="28" rx="7" ry="14" fill="#8fc455" transform="rotate(15 112 28)" />
 
-      {/* أنف صغير */}
-      <ellipse cx="90" cy="87" rx="4" ry="3" fill="#8fc455" />
+      {/* العيون الكبيرة السوداء البيضاوية */}
+      <ellipse cx="72" cy="78" rx="18" ry="22" fill="#1a1a2e" />
+      <ellipse cx="108" cy="78" rx="18" ry="22" fill="#1a1a2e" />
 
-      {/* فم كيوت */}
-      <path d="M 80 96 Q 90 104 100 96" stroke="#261B6D" strokeWidth="2" fill="none" strokeLinecap="round" />
+      {/* لمعة العيون */}
+      <ellipse cx="66" cy="68" rx="6" ry="8" fill="white" opacity="0.5" />
+      <ellipse cx="102" cy="68" rx="6" ry="8" fill="white" opacity="0.5" />
+      <circle cx="64" cy="65" r="3" fill="white" opacity="0.9" />
+      <circle cx="100" cy="65" r="3" fill="white" opacity="0.9" />
 
-      {/* وجنتان برتقالية */}
-      <circle cx="63" cy="85" r="8" fill="#ffb347" opacity="0.3" />
-      <circle cx="117" cy="85" r="8" fill="#ffb347" opacity="0.3" />
+      {/* الأنف */}
+      <ellipse cx="90" cy="98" rx="4" ry="3" fill="#8fc455" />
 
-      {/* نجوم كونية زاهية */}
-      <text x="18" y="55" fontSize="13" fill="#261B6D" opacity="0.7">✦</text>
-      <text x="150" y="50" fontSize="10" fill="#261B6D" opacity="0.6">✦</text>
-      <text x="145" y="95" fontSize="8" fill="#261B6D" opacity="0.5">★</text>
-      <text x="22" y="90" fontSize="8" fill="#8fc455" opacity="0.7">✦</text>
+      {/* الابتسامة */}
+      <path d="M 78 108 Q 90 116 102 108" stroke="#5a8a3a" strokeWidth="2.5" fill="none" strokeLinecap="round" />
 
-      {/* ساقان */}
-      <ellipse cx="72" cy="203" rx="17" ry="12" fill="#B2DE81" />
-      <ellipse cx="108" cy="203" rx="17" ry="12" fill="#B2DE81" />
-      <ellipse cx="72" cy="210" rx="20" ry="8" fill="#8fc455" />
-      <ellipse cx="108" cy="210" rx="20" ry="8" fill="#8fc455" />
+      {/* وجنتان */}
+      <circle cx="58" cy="88" r="9" fill="#ffb347" opacity="0.25" />
+      <circle cx="122" cy="88" r="9" fill="#ffb347" opacity="0.25" />
     </svg>
   );
 }
