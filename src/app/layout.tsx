@@ -19,16 +19,16 @@ const fredoka = Fredoka({
 
 export const metadata: Metadata = {
   title: {
-    default: "MatchaWoob - متجر الماتشا والدب",
-    template: "%s | MatchaWoob",
+    default: "MatchaWdob - متجر الماتشا والدب",
+    template: "%s | MatchaWdob",
   },
-  description: "متجر MatchaWoob - عالم الماتشا الياباني والشخصيات الكيوت. تسوق أفضل منتجات الماتشا مع شحن سريع لجميع مناطق المملكة",
-  keywords: ["ماتشا", "MatchaWoob", "متجر ياباني", "شاي ماتشا", "تسوق سعودي"],
-  authors: [{ name: "MatchaWoob" }],
+  description: "متجر MatchaWdob - عالم الماتشا الياباني والشخصيات الكيوت. تسوق أفضل منتجات الماتشا مع شحن سريع لجميع مناطق المملكة",
+  keywords: ["ماتشا", "MatchaWdob", "متجر ياباني", "شاي ماتشا", "تسوق سعودي"],
+  authors: [{ name: "MatchaWdob" }],
   openGraph: {
     type: "website",
     locale: "ar_SA",
-    siteName: "MatchaWoob",
+    siteName: "MatchaWdob",
   },
 };
 

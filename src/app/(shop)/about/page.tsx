@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "من نحن",
-  description: "قصة MatchaWoob - عالم الماتشا الياباني والشخصيات الكيوت",
+  description: "قصة MatchaWdob - عالم الماتشا الياباني والشخصيات الكيوت",
 };
 
 export default function AboutPage() {
@@ -20,7 +20,7 @@ export default function AboutPage() {
               <p className="text-[#B2DE81] font-bold mb-3">✦ قصتنا</p>
               <h1 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
                 من نحن؟<br />
-                <span className="text-[#B2DE81] font-brand">MatchaWoob</span>
+                <span className="text-[#B2DE81] font-brand">MatchaWdob</span>
               </h1>
               <p className="text-gray-300 text-lg leading-relaxed max-w-xl">
                 متجر ياباني الروح، سعودي الهوى. نجمع بين شغف الماتشا الأصيل وروح الشخصيات الكيوت في تجربة تسوق مختلفة تماماً.
@@ -40,11 +40,11 @@ export default function AboutPage() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-[#B2DE81] font-bold mb-2">✦ بداية الحكاية</p>
-            <h2 className="text-3xl font-black text-[#261B6D]">كيف بدأ MatchaWoob؟</h2>
+            <h2 className="text-3xl font-black text-[#261B6D]">كيف بدأ MatchaWdob؟</h2>
           </div>
           <div className="space-y-6 text-gray-600 leading-relaxed text-base">
             <p>
-              بدأت القصة بكوب واحد من الماتشا الياباني الأصيل. كان الطعم مختلفاً عن كل ما ذقناه من قبل — أخضر، عميق، وناعم في آنٍ واحد. من تلك اللحظة، وُلد حلم MatchaWoob.
+              بدأت القصة بكوب واحد من الماتشا الياباني الأصيل. كان الطعم مختلفاً عن كل ما ذقناه من قبل — أخضر، عميق، وناعم في آنٍ واحد. من تلك اللحظة، وُلد حلم MatchaWdob.
             </p>
             <p>
               أردنا أن نجلب هذه التجربة الاستثنائية إلى كل بيت سعودي، مع لمسة مرحة ومميزة تعكس شخصيتنا: الدب الياباني الكيوت الذي يعشق الماتشا، والكائن الفضائي الأخضر الذي جاء من بعيد ليكتشف طعم هذا الشراب الرائع!

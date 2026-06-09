@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "اتصل بنا",
-  description: "تواصل مع فريق MatchaWoob - نحن هنا للمساعدة",
+  description: "تواصل مع فريق MatchaWdob - نحن هنا للمساعدة",
 };
 
 export default function ContactPage() {
@@ -25,7 +25,7 @@ export default function ContactPage() {
             <div className="space-y-5">
               {[
                 { icon: Phone, label: "الهاتف", value: "920-000-000" },
-                { icon: Mail, label: "البريد الإلكتروني", value: "hello@matchawoob.sa" },
+                { icon: Mail, label: "البريد الإلكتروني", value: "hello@matchwdob.sa" },
                 { icon: MapPin, label: "العنوان", value: "الرياض، المملكة العربية السعودية" },
                 { icon: Clock, label: "ساعات العمل", value: "السبت - الخميس: 9ص - 11م" },
               ].map(({ icon: Icon, label, value }) => (
@@ -44,7 +44,7 @@ export default function ContactPage() {
 
           {/* واتساب */}
           <a
-            href={`https://wa.me/${whatsapp}?text=مرحباً MatchaWoob، أريد الاستفسار عن`}
+            href={`https://wa.me/${whatsapp}?text=مرحباً MatchaWdob، أريد الاستفسار عن`}
             target="_blank"
             className="flex items-center gap-4 bg-green-500 hover:bg-green-600 text-white p-5 rounded-3xl transition-colors"
           >

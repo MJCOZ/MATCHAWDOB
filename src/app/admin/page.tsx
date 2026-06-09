@@ -82,7 +82,7 @@ export default async function AdminDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black text-[#261B6D]">لوحة التحكم ✦</h1>
-          <p className="text-gray-500 text-sm mt-0.5">مرحباً بك في عالم MatchaWoob</p>
+          <p className="text-gray-500 text-sm mt-0.5">مرحباً بك في عالم MatchaWdob</p>
         </div>
         {pendingOrders > 0 && (
           <Link href="/admin/orders?status=PENDING" className="flex items-center gap-2 bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-yellow-100 transition-colors">

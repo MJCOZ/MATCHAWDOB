@@ -69,7 +69,7 @@ export default function FAQPage() {
       <div className="text-center mb-12">
         <p className="text-[#B2DE81] font-bold mb-2">✦ لديك سؤال؟</p>
         <h1 className="text-4xl font-black text-[#261B6D]">الأسئلة الشائعة</h1>
-        <p className="text-gray-500 mt-2">كل ما تريد معرفته عن MatchaWoob</p>
+        <p className="text-gray-500 mt-2">كل ما تريد معرفته عن MatchaWdob</p>
       </div>
 
       <div className="space-y-8">

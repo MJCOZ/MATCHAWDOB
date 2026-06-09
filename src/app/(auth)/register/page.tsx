@@ -36,7 +36,7 @@ export default function RegisterPage() {
       if (!res.ok) throw new Error(data.error);
 
       await signIn("credentials", { email: form.email, password: form.password, redirect: false });
-      toast.success("أهلاً بك في عالم MatchaWoob ✦");
+      toast.success("أهلاً بك في عالم MatchaWdob ✦");
       router.push("/");
     } catch (err: any) {
       toast.error(err.message || "حدث خطأ");

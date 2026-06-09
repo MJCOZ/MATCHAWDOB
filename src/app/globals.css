@@ -16,7 +16,7 @@
     --border: 209 207 237;
     --radius: 1rem;
 
-    /* MatchaWoob Brand Colors */
+    /* MatchaWdob Brand Colors */
     --navy: #261B6D;
     --navy-dark: #1a1250;
     --navy-light: #352a8a;
@@ -101,7 +101,7 @@
     @apply inline-block text-[#B2DE81] animate-sparkle;
   }
 
-  /* بطاقة MatchaWoob */
+  /* بطاقة MatchaWdob */
   .matcha-card {
     @apply bg-white rounded-3xl border-2 border-[#e8e6f5] hover:border-[#B2DE81] transition-all duration-300 overflow-hidden;
   }

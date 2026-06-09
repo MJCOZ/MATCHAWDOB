@@ -30,7 +30,7 @@ function LoginForm() {
         return;
       }
 
-      toast.success("أهلاً بك في MatchaWoob ✦");
+      toast.success("أهلاً بك في MatchaWdob ✦");
       router.push(callbackUrl);
       router.refresh();
     } finally {

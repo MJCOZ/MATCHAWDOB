@@ -48,7 +48,7 @@ export function Header() {
       <header className="sticky top-0 z-50 bg-white shadow-sm border-b-2 border-[#B2DE81]/30">
         <div className="container-custom py-3.5">
           <div className="flex items-center gap-4">
-            {/* لوجو MatchaWoob */}
+            {/* لوجو MatchaWdob */}
             <BrandLogo size="md" variant="color" />
 
             {/* البحث */}

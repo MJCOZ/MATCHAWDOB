@@ -55,7 +55,7 @@ export function BrandLogo({ size = "md", variant = "color", showText = true }: B
       {showText && (
         <div>
           <p className={`font-brand font-bold leading-none ${s.text} ${textColor} tracking-wide`}>
-            MatchaWoob
+            MatchaWdob
           </p>
           <p className={`${s.sub} ${subColor} font-medium mt-0.5 leading-none`}>
             عالم الماتشا الياباني ✦

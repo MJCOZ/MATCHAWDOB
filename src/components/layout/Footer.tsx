@@ -111,7 +111,7 @@ export function Footer() {
                   </div>
                   <div>
                     <p className="text-xs text-[#B2DE81]/50 mb-1">البريد الإلكتروني</p>
-                    <p className="text-sm text-white">hello@matchawoob.sa</p>
+                    <p className="text-sm text-white">hello@matchwdob.sa</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
@@ -156,7 +156,7 @@ export function Footer() {
         <div className="border-t border-[#B2DE81]/15">
           <div className="container-custom py-4">
             <p className="text-center text-[#B2DE81]/50 text-sm">
-              © {new Date().getFullYear()} MatchaWoob. جميع الحقوق محفوظة ✦ صُنع بحب 🍵
+              © {new Date().getFullYear()} MatchaWdob. جميع الحقوق محفوظة ✦ صُنع بحب 🍵
             </p>
           </div>
         </div>

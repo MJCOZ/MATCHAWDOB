@@ -47,7 +47,7 @@ async function main() {
         create: {
           nameAr: "إكسسوارات", nameEn: "Accessories",
           slug: "accessories",
-          description: "إكسسوارات MatchaWoob المميزة",
+          description: "إكسسوارات MatchaWdob المميزة",
           isActive: true, sortOrder: 4,
         },
       }),
@@ -57,7 +57,7 @@ async function main() {
         create: {
           nameAr: "هدايا", nameEn: "Gifts",
           slug: "gifts",
-          description: "أطقم هدايا MatchaWoob الفاخرة",
+          description: "أطقم هدايا MatchaWdob الفاخرة",
           isActive: true, sortOrder: 5,
         },
       }),
@@ -120,7 +120,7 @@ async function main() {
       nameAr: "شاوان - طاسة الماتشا الخزفية",
       nameEn: "Matcha Bowl Chawan",
       slug: "matcha-bowl-chawan",
-      descriptionAr: "طاسة خزفية يابانية تقليدية (شاوان) لتحضير وتقديم الماتشا. تصميم MatchaWoob الحصري.",
+      descriptionAr: "طاسة خزفية يابانية تقليدية (شاوان) لتحضير وتقديم الماتشا. تصميم MatchaWdob الحصري.",
       price: 140, salePrice: 110, stock: 25,
       categoryId: matchaToolsCat.id,
       isFeatured: true, isNew: true, sku: "MW-TOL-002", weight: 0.35,
@@ -164,18 +164,18 @@ async function main() {
     },
     // إكسسوارات
     {
-      nameAr: "كوباية MatchaWoob الكيوت",
-      nameEn: "MatchaWoob Cute Cup",
-      slug: "matchawoob-cute-cup",
+      nameAr: "كوباية MatchaWdob الكيوت",
+      nameEn: "MatchaWdob Cute Cup",
+      slug: "matchwdob-cute-cup",
       descriptionAr: "كوباية زجاجية بطباعة شخصية الدب الياباني. مزدوجة الجدار. 400مل.",
       price: 95, salePrice: null, stock: 30,
       categoryId: accessoriesCat.id,
       isFeatured: true, isNew: true, sku: "MW-ACC-001", weight: 0.25,
     },
     {
-      nameAr: "حقيبة MatchaWoob كانفاس",
-      nameEn: "MatchaWoob Canvas Tote Bag",
-      slug: "matchawoob-tote-bag",
+      nameAr: "حقيبة MatchaWdob كانفاس",
+      nameEn: "MatchaWdob Canvas Tote Bag",
+      slug: "matchwdob-tote-bag",
       descriptionAr: "حقيبة كانفاس بطباعة الكائن الفضائي الأخضر. قطن عالي الجودة.",
       price: 65, salePrice: 52, stock: 55,
       categoryId: accessoriesCat.id,
@@ -183,18 +183,18 @@ async function main() {
     },
     // هدايا
     {
-      nameAr: "صندوق هدية MatchaWoob الفاخر",
-      nameEn: "MatchaWoob Luxury Gift Box",
-      slug: "matchawoob-luxury-gift-box",
-      descriptionAr: "صندوق هدية فاخر: ماتشا سيريمونيال + طقم أدوات + شمعة ماتشا + بطاقة معايدة. تغليف MatchaWoob الحصري.",
+      nameAr: "صندوق هدية MatchaWdob الفاخر",
+      nameEn: "MatchaWdob Luxury Gift Box",
+      slug: "matchwdob-luxury-gift-box",
+      descriptionAr: "صندوق هدية فاخر: ماتشا سيريمونيال + طقم أدوات + شمعة ماتشا + بطاقة معايدة. تغليف MatchaWdob الحصري.",
       price: 450, salePrice: 389, stock: 15,
       categoryId: giftsCat.id,
       isFeatured: true, isNew: true, sku: "MW-GFT-001", weight: 1.2,
     },
     {
-      nameAr: "صندوق هدية MatchaWoob الصغير",
-      nameEn: "MatchaWoob Mini Gift Box",
-      slug: "matchawoob-mini-gift-box",
+      nameAr: "صندوق هدية MatchaWdob الصغير",
+      nameEn: "MatchaWdob Mini Gift Box",
+      slug: "matchwdob-mini-gift-box",
       descriptionAr: "صندوق هدية صغير: ماتشا ستارتر + شاكوزيتسو + بطاقة معايدة. مثالي للمناسبات.",
       price: 145, salePrice: null, stock: 40,
       categoryId: giftsCat.id,
@@ -209,7 +209,7 @@ async function main() {
       create: {
         ...p,
         images: [],
-        tags: ["ماتشا", "ياباني", "matchawoob"],
+        tags: ["ماتشا", "ياباني", "matchwdob"],
         isActive: true,
       },
     });
@@ -260,11 +260,11 @@ async function main() {
   // ===================================================
   const adminPassword = await bcrypt.hash("Admin@2024", 12);
   const admin = await prisma.user.upsert({
-    where: { email: "admin@matchawoob.sa" },
+    where: { email: "admin@matchwdob.sa" },
     update: {},
     create: {
-      name: "مدير MatchaWoob",
-      email: "admin@matchawoob.sa",
+      name: "مدير MatchaWdob",
+      email: "admin@matchwdob.sa",
       password: adminPassword,
       role: "SUPER_ADMIN",
       phone: "+966500000000",
@@ -277,10 +277,10 @@ async function main() {
   // 5. إعدادات المتجر
   // ===================================================
   const settings = [
-    { key: "store_name", value: "MatchaWoob", group: "general" },
+    { key: "store_name", value: "MatchaWdob", group: "general" },
     { key: "store_name_ar", value: "متجر ماتشا والدب", group: "general" },
     { key: "store_phone", value: "+966500000000", group: "general" },
-    { key: "store_email", value: "hello@matchawoob.sa", group: "general" },
+    { key: "store_email", value: "hello@matchwdob.sa", group: "general" },
     { key: "store_address", value: "الرياض، المملكة العربية السعودية", group: "general" },
     { key: "vat_rate", value: "15", group: "pricing" },
     { key: "free_shipping_threshold", value: "200", group: "shipping" },
@@ -303,7 +303,7 @@ async function main() {
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log("🔗 المتجر:          http://localhost:3000");
   console.log("🔧 لوحة التحكم:     http://localhost:3000/admin");
-  console.log("📧 الإيميل:         admin@matchawoob.sa");
+  console.log("📧 الإيميل:         admin@matchwdob.sa");
   console.log("🔑 كلمة المرور:     Admin@2024");
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 }

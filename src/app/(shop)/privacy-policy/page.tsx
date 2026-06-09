@@ -37,7 +37,7 @@ export default function PrivacyPolicyPage() {
             content: `• حق الوصول: يمكنك طلب نسخة من بياناتك
 • حق التعديل: يمكنك تعديل بياناتك في أي وقت
 • حق الحذف: يمكنك طلب حذف حسابك وبياناتك
-• للتواصل: hello@matchawoob.sa`,
+• للتواصل: hello@matchwdob.sa`,
           },
           {
             title: "مشاركة البيانات مع شركاء الشحن",

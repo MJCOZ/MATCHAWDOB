@@ -19,7 +19,7 @@ export function WhatsAppButton() {
               </svg>
             </div>
             <div>
-              <p className="font-bold text-sm">MatchaWoob ✦</p>
+              <p className="font-bold text-sm">MatchaWdob ✦</p>
               <div className="flex items-center gap-1">
                 <div className="w-2 h-2 bg-[#B2DE81] rounded-full animate-pulse"></div>
                 <p className="text-xs text-[#B2DE81]/80">متاح الآن</p>
@@ -33,13 +33,13 @@ export function WhatsAppButton() {
           <div className="p-4">
             <div className="bg-[#eeedf8] rounded-2xl rounded-tr-none p-3 mb-4">
               <p className="text-sm text-[#261B6D]">
-                🍵 أهلاً بك في عالم MatchaWoob!<br />
+                🍵 أهلاً بك في عالم MatchaWdob!<br />
                 كيف يمكننا مساعدتك اليوم؟ ✦
               </p>
               <p className="text-xs text-gray-400 mt-1">الآن</p>
             </div>
             <a
-              href={`https://wa.me/${whatsapp}?text=مرحباً MatchaWoob، أريد الاستفسار عن`}
+              href={`https://wa.me/${whatsapp}?text=مرحباً MatchaWdob، أريد الاستفسار عن`}
               target="_blank"
               className="bg-[#261B6D] hover:bg-[#352a8a] text-white text-sm font-bold py-3 px-4 rounded-2xl flex items-center justify-center gap-2 transition-colors"
             >

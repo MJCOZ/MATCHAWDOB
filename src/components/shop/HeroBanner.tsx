@@ -10,7 +10,7 @@ const slides = [
   {
     id: 1,
     title: "عالم الماتشا",
-    titleEn: "MatchaWoob",
+    titleEn: "MatchaWdob",
     subtitle: "الطعم الياباني الأصيل",
     description: "اكتشف مجموعتنا الفريدة من الماتشا الفاخر وأدوات التحضير الأصيلة",
     cta: "تسوق الآن",
