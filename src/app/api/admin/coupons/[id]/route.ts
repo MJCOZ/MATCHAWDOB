@@ -1,0 +1,28 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+
+async function checkAdmin() {
+  const session = await getServerSession(authOptions);
+  const role = (session?.user as any)?.role;
+  return session && (role === "ADMIN" || role === "SUPER_ADMIN");
+}
+
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+  if (!await checkAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const body = await req.json();
+  const coupon = await prisma.coupon.update({
+    where: { id: params.id },
+    data: body,
+  });
+  return NextResponse.json(coupon);
+}
+
+export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+  if (!await checkAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  await prisma.coupon.delete({ where: { id: params.id } });
+  return NextResponse.json({ success: true });
+}

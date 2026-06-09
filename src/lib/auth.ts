@@ -3,7 +3,6 @@
 // ================================================
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
@@ -16,7 +15,6 @@ export const authOptions: NextAuthOptions = {
     error: "/login",
   },
   providers: [
-    // تسجيل الدخول بالبريد وكلمة المرور
     CredentialsProvider({
       name: "credentials",
       credentials: {

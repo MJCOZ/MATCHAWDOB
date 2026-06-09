@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { ProductFilters } from "@/components/shop/ProductFilters";
+import { ProductSortSelect } from "@/components/shop/ProductSortSelect";
 import type { Metadata } from "next";
 
 interface SearchParams {
@@ -100,20 +101,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
             </div>
 
             {/* الترتيب */}
-            <select
-              className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-orange-400 bg-white"
-              defaultValue={searchParams.sort || "default"}
-              onChange={(e) => {
-                const url = new URL(window.location.href);
-                url.searchParams.set("sort", e.target.value);
-                window.location.href = url.toString();
-              }}
-            >
-              <option value="default">الأكثر تميزاً</option>
-              <option value="newest">الأحدث</option>
-              <option value="price_asc">السعر: من الأقل</option>
-              <option value="price_desc">السعر: من الأعلى</option>
-            </select>
+            <ProductSortSelect currentSort={searchParams.sort} currentParams={searchParams as Record<string, string>} />
           </div>
 
           {/* شبكة المنتجات */}
