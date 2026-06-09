@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-cairo)", "Cairo", "sans-serif"],
-        brand: ["var(--font-fredoka)", "Fredoka One", "cursive"],
+        sans: ["AraHamahHoms", "sans-serif"],
+        brand: ["AraHamahHoms", "sans-serif"],
       },
       colors: {
         brand: {
