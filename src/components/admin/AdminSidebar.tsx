@@ -3,12 +3,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Package, Tag, ShoppingBag,
-  Users, Ticket, Settings, ChevronLeft, Store
+  Users, Ticket, Settings, ChevronLeft, Store, Palette
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 
 const navItems = [
   { href: "/admin", label: "لوحة التحكم", icon: LayoutDashboard, exact: true },
+  { href: "/admin/customizer", label: "مخصص التصميم", icon: Palette },
   { href: "/admin/orders", label: "الطلبات", icon: ShoppingBag },
   { href: "/admin/products", label: "المنتجات", icon: Package },
   { href: "/admin/categories", label: "التصنيفات", icon: Tag },

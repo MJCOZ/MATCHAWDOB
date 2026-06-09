@@ -5,37 +5,24 @@ import { ChevronRight, ChevronLeft, ShoppingBag, Sparkles } from "lucide-react";
 import { PandaAstronaut } from "@/components/brand/PandaAstronaut";
 import { AlienMascot } from "@/components/brand/AlienMascot";
 
-const slides = [
-  {
-    id: 1,
-    title: "ماتشا من الفضاء",
-    subtitle: "الطعم الياباني الأصيل",
-    description: "اكتشف مجموعتنا الفريدة من الماتشا الفاخر وأدوات التحضير الأصيلة — مختارة بعناية من أجود مزارع اليابان",
-    cta: "تسوق الآن",
-    ctaLink: "/products",
-    badge: "✦ جديد ومميز",
-    mascot: "panda-wave",
-  },
-  {
-    id: 2,
-    title: "ماتشا من الفضاء",
-    subtitle: "من اليابان مباشرةً إليك",
-    description: "أفضل أنواع الماتشا من مزارع اليابان الشهيرة — نكهة خاصة لكل رشفة",
-    cta: "اكتشف الآن",
-    ctaLink: "/products?category=matcha-powder",
-    badge: "🍵 ماتشا أصيل",
-    mascot: "alien",
-  },
-  {
-    id: 3,
-    title: "ماتشا من الفضاء",
-    subtitle: "هدايا كيوت ومميزة",
-    description: "أطقم هدايا فاخرة بتصميم ياباني راقٍ — لكل مناسبة خاصة وكل من تحب",
-    cta: "العروض الحصرية",
-    ctaLink: "/products?sale=true",
-    badge: "✦ عروض محدودة",
-    mascot: "panda-surprise",
-  },
+interface Slide {
+  title: string; subtitle: string; description: string;
+  cta: string; ctaLink: string; badge: string; mascot: string;
+}
+interface Stat { num: string; label: string; }
+interface BannerSettings {
+  slides?: Slide[]; stats?: Stat[];
+}
+
+const DEFAULT_SLIDES: Slide[] = [
+  { title: "ماتشا من الفضاء", subtitle: "الطعم الياباني الأصيل", description: "اكتشف مجموعتنا الفريدة من الماتشا الفاخر وأدوات التحضير الأصيلة", cta: "تسوق الآن", ctaLink: "/products", badge: "✦ جديد ومميز", mascot: "wave" },
+  { title: "ماتشا من الفضاء", subtitle: "من اليابان مباشرةً إليك", description: "أفضل أنواع الماتشا من مزارع اليابان الشهيرة", cta: "اكتشف الآن", ctaLink: "/products?category=matcha-powder", badge: "🍵 ماتشا أصيل", mascot: "alien" },
+  { title: "ماتشا من الفضاء", subtitle: "هدايا كيوت ومميزة", description: "أطقم هدايا فاخرة بتصميم ياباني راقٍ — لكل مناسبة خاصة", cta: "العروض الحصرية", ctaLink: "/products?sale=true", badge: "✦ عروض محدودة", mascot: "surprised" },
+];
+const DEFAULT_STATS: Stat[] = [
+  { num: "+500", label: "عميل سعيد" },
+  { num: "100%", label: "ماتشا أصيل" },
+  { num: "24h",  label: "توصيل سريع" },
 ];
 
 /* نجمة مضيئة */
@@ -69,13 +56,25 @@ const stars = [
 
 export function HeroBanner() {
   const [current, setCurrent] = useState(0);
+  const [slides, setSlides] = useState<Slide[]>(DEFAULT_SLIDES);
+  const [stats, setStats] = useState<Stat[]>(DEFAULT_STATS);
+
+  useEffect(() => {
+    fetch("/api/store-settings")
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d?.slides?.length === 3) setSlides(d.slides);
+        if (d?.stats?.length === 3) setStats(d.stats);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
     }, 5500);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   const slide = slides[current];
 
@@ -141,11 +140,7 @@ export function HeroBanner() {
 
             {/* إحصائيات */}
             <div className="flex items-center gap-6 mt-8 pt-6 border-t border-white/10">
-              {[
-                { num: "+500", label: "عميل سعيد" },
-                { num: "100%", label: "ماتشا أصيل" },
-                { num: "24h",  label: "توصيل سريع" },
-              ].map((stat) => (
+              {stats.map((stat) => (
                 <div key={stat.label} className="text-center">
                   <p className="text-xl text-[#B2DE81] font-bold">{stat.num}</p>
                   <p className="text-xs text-gray-400 mt-0.5">{stat.label}</p>
