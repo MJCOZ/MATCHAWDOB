@@ -1,0 +1,35 @@
+# التبعيات
+node_modules/
+.npm
+
+# البناء
+.next/
+out/
+build/
+
+# المتغيرات البيئية - لا ترفع هذا الملف أبداً!
+.env
+.env.local
+.env.*.local
+
+# قاعدة البيانات
+*.db
+*.sqlite
+
+# السجلات
+*.log
+npm-debug.log*
+
+# نظام التشغيل
+.DS_Store
+Thumbs.db
+
+# الصور المرفوعة محلياً
+public/uploads/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Prisma
+prisma/migrations/*.sql

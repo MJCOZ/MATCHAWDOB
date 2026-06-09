@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --primary: 24 95% 53%;      /* البرتقالي الذهبي */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 91% 15%;   /* الأزرق الداكن */
+    --secondary-foreground: 0 0% 100%;
+    --accent: 142 76% 36%;      /* الأخضر */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --border: 214.3 31.8% 91.4%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-cairo), 'Cairo', sans-serif;
+  }
+}
+
+@layer components {
+  /* أزرار */
+  .btn-primary {
+    @apply bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-200;
+  }
+
+  .btn-outline {
+    @apply border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-200;
+  }
+
+  /* بطاقة منتج */
+  .product-card {
+    @apply bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group border border-gray-100;
+  }
+
+  /* حاوية */
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* شارة */
+  .badge {
+    @apply text-xs font-bold px-2.5 py-1 rounded-full;
+  }
+
+  .badge-sale {
+    @apply badge bg-red-500 text-white;
+  }
+
+  .badge-new {
+    @apply badge bg-green-500 text-white;
+  }
+
+  /* مدخل */
+  .input-field {
+    @apply w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all;
+  }
+
+  /* بطاقة */
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-6;
+  }
+}
+
+@layer utilities {
+  /* تأثيرات */
+  .text-gradient {
+    @apply bg-gradient-to-r from-orange-500 to-yellow-400 bg-clip-text text-transparent;
+  }
+
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
+
+  /* تمرير أفقي */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* أحجام النصوص العربية */
+  .text-ar-xs { @apply text-sm leading-relaxed; }
+  .text-ar-sm { @apply text-base leading-relaxed; }
+  .text-ar-lg { @apply text-xl leading-relaxed; }
+}
+
+/* تأثير الانتقال للصفحة */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* شريط التحميل */
+.loading-bar {
+  height: 3px;
+  background: linear-gradient(90deg, #f97316, #facc15, #f97316);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
