@@ -55,6 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     }
     html { font-size: ${basePx}px; }
     body { background-color: ${theme.bg} !important; font-family: ${fontStack} !important; }
+    .font-en, h1:lang(en), h2:lang(en), h3:lang(en) { font-family: 'CleoFolk', 'Syne', sans-serif !important; }
     .btn-primary { background-color: ${theme.primary} !important; }
     .btn-primary:hover { background-color: ${theme.primary}dd !important; }
     .btn-secondary { background-color: ${theme.secondary} !important; color: ${theme.primary} !important; }
@@ -64,6 +65,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="ar" dir="rtl">
       <head>
+        {/* Syne — English brutalist fallback until CleoFolk font file is added */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap" />
         {gfUrl && <link rel="stylesheet" href={gfUrl} />}
         <style dangerouslySetInnerHTML={{ __html: themeCSS }} />
       </head>

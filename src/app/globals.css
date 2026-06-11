@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Fonts ── */
 @font-face {
   font-family: 'AraHamahHoms';
   src: url('/fonts/AraHamahHoms-Regular.ttf') format('truetype');
@@ -10,169 +11,216 @@
   font-display: swap;
 }
 
+/* Cleo Folk Demo — place font file at /public/fonts/CleoFolk-Regular.ttf */
+@font-face {
+  font-family: 'CleoFolk';
+  src: url('/fonts/CleoFolk-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007F, U+00A0-00FF;
+}
+
 @layer base {
   :root {
-    --background: 248 247 255;
-    --foreground: 17 24 39;
-    --primary: 248 27 109 / 0%;      /* Navy #261B6D */
-    --primary-foreground: 255 255 255;
-    --secondary: 178 222 129;        /* Matcha Green #B2DE81 */
-    --secondary-foreground: 38 27 109;
-    --accent: 178 222 129;
-    --muted: 238 237 248;
-    --muted-foreground: 107 114 128;
-    --border: 209 207 237;
-    --radius: 1rem;
-
-    /* MatchaWdob Brand Colors */
-    --navy: #261B6D;
-    --navy-dark: #1a1250;
-    --navy-light: #352a8a;
-    --green: #B2DE81;
-    --green-dark: #8fc455;
-    --green-light: #d4f0a8;
+    --navy:           #261B6D;
+    --navy-dark:      #1a1250;
+    --navy-light:     #352a8a;
+    --green:          #B2DE81;
+    --green-dark:     #8fc455;
+    --green-light:    #d4f0a8;
+    --cream:          #FAFAF5;
+    --ink:            #1a1a1a;
+    --radius: 4px;
   }
 
-  * {
-    @apply border-[#d1cfe5];
-  }
+  * { box-sizing: border-box; }
 
-  html {
-    scroll-behavior: smooth;
-  }
+  html { scroll-behavior: smooth; }
 
   body {
-    @apply bg-[#F8F7FF] text-gray-900;
+    @apply text-gray-900;
+    background-color: var(--cream);
     font-family: 'AraHamahHoms', sans-serif;
   }
 }
 
 @layer components {
-  /* أزرار Brand */
+
+  /* ══ Buttons ══ */
   .btn-primary {
-    @apply bg-[#261B6D] hover:bg-[#1a1250] text-white font-semibold py-2.5 px-6 rounded-2xl transition-all duration-200 shadow-sm hover:shadow-lg hover:shadow-[#261B6D]/30 active:scale-95;
+    @apply bg-[#261B6D] text-white font-black py-3 px-6 inline-flex items-center justify-center gap-2;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    border-radius: 4px;
+    transition: transform .1s, box-shadow .1s;
   }
+  .btn-primary:hover  { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); }
+  .btn-primary:active { transform: translate(2px,2px);   box-shadow: 2px 2px 0 var(--ink); }
 
   .btn-secondary {
-    @apply bg-[#B2DE81] hover:bg-[#8fc455] text-[#261B6D] font-bold py-2.5 px-6 rounded-2xl transition-all duration-200 shadow-sm;
+    @apply bg-[#B2DE81] text-[#261B6D] font-black py-3 px-6 inline-flex items-center justify-center gap-2;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    border-radius: 4px;
+    transition: transform .1s, box-shadow .1s;
   }
+  .btn-secondary:hover  { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); }
+  .btn-secondary:active { transform: translate(2px,2px);   box-shadow: 2px 2px 0 var(--ink); }
 
   .btn-outline {
-    @apply border-2 border-[#261B6D] text-[#261B6D] hover:bg-[#261B6D] hover:text-white font-semibold py-2.5 px-6 rounded-2xl transition-all duration-200;
+    @apply bg-transparent text-[#261B6D] font-black py-3 px-6 inline-flex items-center justify-center gap-2;
+    border: 2px solid #261B6D;
+    box-shadow: 3px 3px 0 #261B6D;
+    border-radius: 4px;
+    transition: transform .1s, box-shadow .1s, background-color .1s, color .1s;
   }
+  .btn-outline:hover { @apply bg-[#261B6D] text-white; transform: translate(-2px,-2px); box-shadow: 5px 5px 0 #261B6D; }
 
   .btn-green {
-    @apply bg-[#B2DE81] hover:bg-[#8fc455] text-[#261B6D] font-bold py-2.5 px-6 rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-95;
+    @apply bg-[#B2DE81] text-[#261B6D] font-black py-3 px-6 inline-flex items-center justify-center gap-2;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    border-radius: 4px;
+    transition: transform .1s, box-shadow .1s;
   }
+  .btn-green:hover  { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); }
+  .btn-green:active { transform: translate(2px,2px);   box-shadow: 2px 2px 0 var(--ink); }
 
-  /* بطاقة منتج */
+  /* ══ Cards ══ */
   .product-card {
-    @apply bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-[#e8e6f5];
+    @apply bg-white block overflow-hidden;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    border-radius: 4px;
+    transition: transform .12s, box-shadow .12s;
   }
+  .product-card:hover { transform: translate(-3px,-3px); box-shadow: 7px 7px 0 var(--ink); }
 
-  /* حاوية */
-  .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  /* شارة */
-  .badge {
-    @apply text-xs font-bold px-2.5 py-1 rounded-full;
-  }
-
-  .badge-sale {
-    @apply badge bg-red-500 text-white;
-  }
-
-  .badge-new {
-    @apply badge bg-[#B2DE81] text-[#261B6D];
-  }
-
-  /* مدخل */
-  .input-field {
-    @apply w-full border-2 border-[#d1cfe5] rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#261B6D]/40 focus:border-[#261B6D] transition-all bg-white;
-  }
-
-  /* بطاقة */
   .card {
-    @apply bg-white rounded-3xl shadow-sm border border-[#e8e6f5] p-6;
+    @apply bg-white p-6;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    border-radius: 4px;
   }
 
-  /* Brand heading font */
-  .font-brand {
-    font-family: 'AraHamahHoms', sans-serif;
-    letter-spacing: 0.02em;
-  }
-
-  /* نجوم الزينة */
-  .sparkle {
-    @apply inline-block text-[#B2DE81] animate-sparkle;
-  }
-
-  /* بطاقة MatchaWdob */
   .matcha-card {
-    @apply bg-white rounded-3xl border-2 border-[#e8e6f5] hover:border-[#B2DE81] transition-all duration-300 overflow-hidden;
+    @apply bg-white overflow-hidden;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 #B2DE81;
+    border-radius: 4px;
+    transition: transform .12s, box-shadow .12s;
+  }
+  .matcha-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 #B2DE81; }
+
+  /* ══ Container ══ */
+  .container-custom { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
+
+  /* ══ Badges ══ */
+  .badge {
+    @apply text-xs font-black px-2.5 py-1;
+    border: 1.5px solid var(--ink);
+    border-radius: 2px;
+  }
+  .badge-sale { @apply badge bg-[#ff3b3b] text-white; }
+  .badge-new  { @apply badge bg-[#B2DE81] text-[#261B6D]; }
+
+  /* ══ Input ══ */
+  .input-field {
+    @apply w-full px-4 py-3 text-sm focus:outline-none bg-white;
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    transition: box-shadow .1s;
+  }
+  .input-field:focus { box-shadow: 3px 3px 0 #261B6D; border-color: #261B6D; }
+
+  /* ══ Typography ══ */
+  .font-brand { font-family: 'AraHamahHoms', sans-serif; }
+  .font-en    { font-family: 'CleoFolk', 'Syne', sans-serif; }
+
+  /* ══ Section tag (Japanese-brutalist label) ══ */
+  .section-tag {
+    @apply inline-flex items-center gap-1.5 text-xs font-black tracking-wider uppercase;
+    background: #B2DE81;
+    color: #261B6D;
+    padding: 4px 12px;
+    border: 2px solid var(--ink);
+    box-shadow: 2px 2px 0 var(--ink);
+    border-radius: 2px;
+  }
+
+  /* ══ Sparkle ══ */
+  .sparkle { @apply inline-block text-[#B2DE81] animate-sparkle; }
+
+  /* ══ Admin ══ */
+  .admin-sidebar {
+    background: linear-gradient(160deg, #261B6D 0%, #1a1250 100%);
+    border-left: 3px solid #B2DE81;
   }
 }
 
 @layer utilities {
-  /* تأثيرات */
-  .text-gradient {
-    @apply bg-gradient-to-r from-[#261B6D] to-[#352a8a] bg-clip-text text-transparent;
-  }
+  .text-gradient       { @apply bg-gradient-to-r from-[#261B6D] to-[#352a8a] bg-clip-text text-transparent; }
+  .text-gradient-green { @apply bg-gradient-to-r from-[#8fc455] to-[#B2DE81] bg-clip-text text-transparent; }
 
-  .text-gradient-green {
-    @apply bg-gradient-to-r from-[#8fc455] to-[#B2DE81] bg-clip-text text-transparent;
-  }
+  .glass      { @apply bg-white/80 backdrop-blur-md; border: 1px solid rgba(255,255,255,.3); }
+  .glass-navy { background: rgba(38,27,109,.85); backdrop-filter: blur(12px); border: 1px solid rgba(178,222,129,.2); }
 
-  .glass {
-    @apply bg-white/80 backdrop-blur-md border border-white/20;
-  }
+  .scrollbar-hide               { -ms-overflow-style: none; scrollbar-width: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
 
-  .glass-navy {
-    @apply bg-[#261B6D]/80 backdrop-blur-md border border-[#261B6D]/20;
-  }
-
-  /* تمرير أفقي */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* أحجام النصوص العربية */
   .text-ar-xs { @apply text-sm leading-relaxed; }
   .text-ar-sm { @apply text-base leading-relaxed; }
   .text-ar-lg { @apply text-xl leading-relaxed; }
 
-  /* تأثير التألق */
-  .glow-navy {
-    box-shadow: 0 0 30px rgba(38, 27, 109, 0.3);
+  .glow-navy  { box-shadow: 0 0 30px rgba(38,27,109,.3); }
+  .glow-green { box-shadow: 0 0 30px rgba(178,222,129,.4); }
+
+  /* Brutalist shadows */
+  .brut-shadow       { box-shadow: 4px 4px 0 #1a1a1a; }
+  .brut-shadow-navy  { box-shadow: 4px 4px 0 #261B6D; }
+  .brut-shadow-green { box-shadow: 4px 4px 0 #B2DE81; }
+  .brut-shadow-sm    { box-shadow: 3px 3px 0 #1a1a1a; }
+  .brut-shadow-lg    { box-shadow: 6px 6px 0 #1a1a1a; }
+
+  /* Dot grid background */
+  .ink-dots-bg {
+    background-image: radial-gradient(circle, rgba(26,18,80,.07) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
   }
-  .glow-green {
-    box-shadow: 0 0 30px rgba(178, 222, 129, 0.4);
+
+  /* Brutalist grid lines */
+  .brut-grid-bg {
+    background-image:
+      linear-gradient(rgba(38,27,109,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(38,27,109,.04) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
 }
 
-/* تأثير الانتقال للصفحة */
+/* ── Keyframes ── */
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+.animate-fadeInUp { animation: fadeInUp .5s ease-out; }
 
-.animate-fadeInUp {
-  animation: fadeInUp 0.5s ease-out;
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-12px); }
 }
+.animate-float { animation: float 3s ease-in-out infinite; }
 
-/* شريط التحميل */
+@keyframes sparkle {
+  0%,100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  50%     { opacity: .6; transform: scale(.85) rotate(20deg); }
+}
+.animate-sparkle { animation: sparkle 2s ease-in-out infinite; }
+
+@keyframes loading {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 .loading-bar {
   height: 3px;
   background: linear-gradient(90deg, #261B6D, #B2DE81, #261B6D);
@@ -180,61 +228,26 @@
   animation: loading 1.5s infinite;
 }
 
-@keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
+.animate-marquee { animation: marquee 20s linear infinite; }
 
-/* طفو الشخصيات */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* النجوم البراقة */
-@keyframes sparkle {
-  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
-  50% { opacity: 0.6; transform: scale(0.85) rotate(20deg); }
-}
-
-.animate-sparkle {
-  animation: sparkle 2s ease-in-out infinite;
-}
-
-/* الموجة الخضراء */
-.wavy-divider {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 80'%3E%3Cpath d='M0,40 C200,80 400,0 600,40 C800,80 1000,0 1200,40 L1200,80 L0,80 Z' fill='%23B2DE81'/%3E%3C/svg%3E");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-}
-
-.wavy-divider-top {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 80'%3E%3Cpath d='M0,40 C200,0 400,80 600,40 C800,0 1000,80 1200,40 L1200,0 L0,0 Z' fill='%23B2DE81'/%3E%3C/svg%3E");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-}
-
-/* نمط نجوم الخلفية */
+/* Stars bg pattern */
 .stars-pattern {
   background-image:
-    radial-gradient(circle, rgba(178, 222, 129, 0.15) 1px, transparent 1px),
-    radial-gradient(circle, rgba(178, 222, 129, 0.1) 1px, transparent 1px);
+    radial-gradient(circle, rgba(178,222,129,.15) 1px, transparent 1px),
+    radial-gradient(circle, rgba(178,222,129,.1)  1px, transparent 1px);
   background-size: 30px 30px, 60px 60px;
   background-position: 0 0, 15px 15px;
 }
 
-/* نجمة متألقة */
-.star-decoration::before {
-  content: "✦";
-  color: #B2DE81;
-  font-size: 1.2em;
-}
+.star-decoration::before { content: "✦"; color: #B2DE81; font-size: 1.2em; }
 
-/* Admin sidebar brand */
-.admin-sidebar {
-  background: linear-gradient(160deg, #261B6D 0%, #1a1250 100%);
+/* Wavy dividers */
+.wavy-divider {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 80'%3E%3Cpath d='M0,40 C200,80 400,0 600,40 C800,80 1000,0 1200,40 L1200,80 L0,80 Z' fill='%23B2DE81'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }

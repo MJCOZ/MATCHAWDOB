@@ -12,19 +12,42 @@ import { BrandLogo } from "@/components/brand/BrandLogo";
 
 const categories = [
   { nameAr: "كل المنتجات", slug: "" },
-  { nameAr: "ماتشا بودر", slug: "matcha-powder" },
+  { nameAr: "ماتشا بودر",  slug: "matcha-powder" },
   { nameAr: "أدوات الماتشا", slug: "matcha-tools" },
-  { nameAr: "مشروبات", slug: "drinks" },
-  { nameAr: "إكسسوارات", slug: "accessories" },
-  { nameAr: "هدايا", slug: "gifts" },
+  { nameAr: "مشروبات",    slug: "drinks" },
+  { nameAr: "إكسسوارات",  slug: "accessories" },
+  { nameAr: "هدايا",      slug: "gifts" },
 ];
+
+/* شريط الإعلانات المتحرك */
+function AnnouncementBar() {
+  const items = [
+    "✦ شحن مجاني للطلبات فوق 200 ريال ✦",
+    "MATCHA FROM SPACE",
+    "✦ ضمان الجودة 100% ✦",
+    "抹茶 FROM JAPAN",
+    "✦ توصيل خلال 24 ساعة ✦",
+  ];
+  const repeated = [...items, ...items];
+  return (
+    <div className="overflow-hidden" style={{ background: "#B2DE81", borderBottom: "2px solid #1a1a1a" }}>
+      <div className="flex items-center animate-marquee whitespace-nowrap py-2 gap-10">
+        {repeated.map((item, i) => (
+          <span key={i} className="text-xs font-black text-[#261B6D] shrink-0 px-4">
+            <span className={item.match(/[A-Z]/) ? "font-en" : ""}>{item}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function Header() {
   const { data: session } = useSession();
   const { getItemCount, openCart } = useCartStore();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen]     = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery]   = useState("");
   const itemCount = getItemCount();
 
   const isAdmin = (session?.user as any)?.role === "ADMIN" ||
@@ -32,23 +55,14 @@ export function Header() {
 
   return (
     <>
-      {/* شريط علوي */}
-      <div className="bg-[#B2DE81] text-[#261B6D] text-sm py-2 hidden md:block">
-        <div className="container-custom flex justify-between items-center">
-          <p className="font-semibold text-xs">✦ شحن مجاني للطلبات فوق 200 ريال ✦</p>
-          <div className="flex items-center gap-4 font-medium text-xs">
-            <span>📞 920000000</span>
-            <span className="opacity-50">|</span>
-            <span>الرياض، المملكة العربية السعودية</span>
-          </div>
-        </div>
-      </div>
+      {/* شريط الإعلانات */}
+      <AnnouncementBar />
 
       {/* الهيدر الرئيسي */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm border-b-2 border-[#B2DE81]/30">
-        <div className="container-custom py-3.5">
+      <header className="sticky top-0 z-50 bg-white" style={{ borderBottom: "3px solid #1a1a1a", boxShadow: "0 3px 0 #1a1a1a" }}>
+        <div className="container-custom py-3">
           <div className="flex items-center gap-4">
-            {/* لوجو MatchaWdob */}
+            {/* اللوجو */}
             <BrandLogo size="md" variant="color" />
 
             {/* البحث */}
@@ -59,9 +73,12 @@ export function Header() {
                     type="text"
                     name="q"
                     placeholder="ابحث في عالم الماتشا..."
-                    className="w-full border-2 border-[#B2DE81] rounded-2xl pr-12 pl-4 py-2.5 text-sm focus:outline-none focus:border-[#261B6D] focus:ring-2 focus:ring-[#261B6D]/20 bg-[#F8F7FF] transition-all"
+                    className="w-full pr-12 pl-4 py-2.5 text-sm focus:outline-none"
+                    style={{ border: "2px solid #1a1a1a", borderRadius: "4px", background: "#FAFAF5", transition: "box-shadow .1s" }}
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    onFocus={e => { (e.target as HTMLElement).style.boxShadow = "3px 3px 0 #261B6D"; }}
+                    onBlur={e =>  { (e.target as HTMLElement).style.boxShadow = "none"; }}
                   />
                   <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#261B6D]">
                     <Search size={20} />
@@ -72,59 +89,53 @@ export function Header() {
 
             {/* أدوات التنقل */}
             <div className="flex items-center gap-2 mr-auto">
+
               {/* المستخدم */}
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 p-2.5 rounded-2xl hover:bg-[#eeedf8] transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 font-bold text-sm text-[#261B6D] transition-all"
+                  style={{ border: "2px solid #1a1a1a", borderRadius: "4px", boxShadow: "2px 2px 0 #1a1a1a" }}
                 >
-                  <User size={22} className="text-[#261B6D]" />
-                  {session?.user ? (
-                    <span className="hidden sm:block text-sm font-medium text-[#261B6D] max-w-[80px] truncate">
-                      {session.user.name?.split(" ")[0]}
-                    </span>
-                  ) : (
-                    <span className="hidden sm:block text-sm text-[#261B6D]">دخول</span>
-                  )}
+                  <User size={18} className="text-[#261B6D]" />
+                  {session?.user
+                    ? <span className="hidden sm:block max-w-[70px] truncate">{session.user.name?.split(" ")[0]}</span>
+                    : <span className="hidden sm:block">دخول</span>
+                  }
                 </button>
 
                 {isUserMenuOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-56 bg-white rounded-3xl shadow-xl border-2 border-[#eeedf8] py-2 z-50">
+                  <div className="absolute left-0 top-full mt-2 w-56 bg-white py-2 z-50"
+                    style={{ border: "2px solid #1a1a1a", boxShadow: "4px 4px 0 #1a1a1a", borderRadius: "4px" }}>
                     {session?.user ? (
                       <>
-                        <div className="px-4 py-3 border-b border-[#eeedf8]">
-                          <p className="font-bold text-sm text-[#261B6D]">{session.user.name}</p>
+                        <div className="px-4 py-3" style={{ borderBottom: "1px solid #e5e7eb" }}>
+                          <p className="font-black text-sm text-[#261B6D]">{session.user.name}</p>
                           <p className="text-xs text-gray-500 mt-0.5">{session.user.email}</p>
                         </div>
-                        <Link href="/account" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#eeedf8] text-sm text-gray-700 transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                          <User size={16} className="text-[#261B6D]" />
-                          حسابي
+                        <Link href="/account" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAFAF5] text-sm font-medium text-gray-700 transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                          <User size={16} className="text-[#261B6D]" /> حسابي
                         </Link>
-                        <Link href="/orders" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#eeedf8] text-sm text-gray-700 transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                          <Package size={16} className="text-[#261B6D]" />
-                          طلباتي
+                        <Link href="/orders" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAFAF5] text-sm font-medium text-gray-700 transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                          <Package size={16} className="text-[#261B6D]" /> طلباتي
                         </Link>
                         {isAdmin && (
-                          <Link href="/admin" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#B2DE81]/20 text-sm text-[#261B6D] font-bold transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                            <Settings size={16} />
-                            لوحة التحكم
+                          <Link href="/admin" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#B2DE81]/20 text-sm font-black text-[#261B6D] transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                            <Settings size={16} /> لوحة التحكم
                           </Link>
                         )}
-                        <hr className="my-1 border-[#eeedf8]" />
-                        <button
-                          onClick={() => { signOut(); setIsUserMenuOpen(false); }}
-                          className="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-sm text-red-500 w-full text-right transition-colors"
-                        >
-                          <LogOut size={16} />
-                          تسجيل الخروج
+                        <hr className="my-1 border-gray-100" />
+                        <button onClick={() => { signOut(); setIsUserMenuOpen(false); }}
+                          className="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-sm text-red-500 w-full text-right transition-colors">
+                          <LogOut size={16} /> تسجيل الخروج
                         </button>
                       </>
                     ) : (
                       <>
-                        <Link href="/login" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#eeedf8] text-sm font-medium text-[#261B6D] transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                        <Link href="/login" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAFAF5] text-sm font-bold text-[#261B6D] transition-colors" onClick={() => setIsUserMenuOpen(false)}>
                           تسجيل الدخول
                         </Link>
-                        <Link href="/register" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#B2DE81]/20 text-sm text-[#261B6D] font-bold transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                        <Link href="/register" className="flex items-center gap-3 px-4 py-2.5 hover:bg-[#B2DE81]/20 text-sm font-black text-[#261B6D] transition-colors" onClick={() => setIsUserMenuOpen(false)}>
                           إنشاء حساب جديد ✦
                         </Link>
                       </>
@@ -134,24 +145,25 @@ export function Header() {
               </div>
 
               {/* السلة */}
-              <button
-                onClick={openCart}
-                className="relative p-2.5 rounded-2xl hover:bg-[#eeedf8] transition-colors"
+              <button onClick={openCart}
+                className="relative flex items-center gap-2 px-3 py-2 font-bold text-sm text-[#261B6D] transition-all"
+                style={{ border: "2px solid #1a1a1a", borderRadius: "4px", boxShadow: "2px 2px 0 #1a1a1a" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = "translate(-1px,-1px)"; (e.currentTarget as HTMLElement).style.boxShadow = "3px 3px 0 #1a1a1a"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ""; (e.currentTarget as HTMLElement).style.boxShadow = "2px 2px 0 #1a1a1a"; }}
               >
-                <ShoppingCart size={22} className="text-[#261B6D]" />
+                <ShoppingCart size={20} className="text-[#261B6D]" />
                 {itemCount > 0 && (
-                  <span className="absolute -top-1 -left-1 bg-[#B2DE81] text-[#261B6D] text-xs font-black w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
+                  <span className="font-black text-xs" style={{ background: "#B2DE81", color: "#261B6D", padding: "1px 7px", border: "1.5px solid #1a1a1a", borderRadius: "2px" }}>
                     {itemCount > 9 ? "9+" : itemCount}
                   </span>
                 )}
               </button>
 
               {/* قائمة الجوال */}
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2.5 rounded-2xl hover:bg-[#eeedf8] transition-colors md:hidden"
-              >
-                {isMenuOpen ? <X size={22} className="text-[#261B6D]" /> : <Menu size={22} className="text-[#261B6D]" />}
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-2 md:hidden transition-all"
+                style={{ border: "2px solid #1a1a1a", borderRadius: "4px", boxShadow: "2px 2px 0 #1a1a1a" }}>
+                {isMenuOpen ? <X size={20} className="text-[#261B6D]" /> : <Menu size={20} className="text-[#261B6D]" />}
               </button>
             </div>
           </div>
@@ -160,12 +172,9 @@ export function Header() {
           <div className="mt-3 md:hidden">
             <form action="/products" method="GET">
               <div className="relative">
-                <input
-                  type="text"
-                  name="q"
-                  placeholder="ابحث في عالم الماتشا..."
-                  className="w-full border-2 border-[#B2DE81] rounded-2xl pr-10 pl-4 py-2.5 text-sm focus:outline-none focus:border-[#261B6D] bg-[#F8F7FF]"
-                />
+                <input type="text" name="q" placeholder="ابحث في عالم الماتشا..."
+                  className="w-full pr-10 pl-4 py-2.5 text-sm focus:outline-none"
+                  style={{ border: "2px solid #1a1a1a", borderRadius: "4px", background: "#FAFAF5" }} />
                 <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#261B6D]">
                   <Search size={18} />
                 </button>
@@ -175,21 +184,23 @@ export function Header() {
         </div>
 
         {/* شريط التصنيفات */}
-        <nav className="border-t border-[#eeedf8] hidden md:block bg-[#F8F7FF]/50">
+        <nav className="hidden md:block" style={{ borderTop: "2px solid #1a1a1a", background: "#FAFAF5" }}>
           <div className="container-custom">
-            <ul className="flex items-center gap-1 py-2 overflow-x-auto scrollbar-hide">
-              {categories.map((cat) => (
-                <li key={cat.slug}>
+            <ul className="flex items-center gap-0 py-0 overflow-x-auto scrollbar-hide">
+              {categories.map((cat, idx) => (
+                <li key={cat.slug} style={{ borderLeft: idx > 0 ? "1px solid #e5e7eb" : "none" }}>
                   <Link
                     href={cat.slug ? `/products?category=${cat.slug}` : "/products"}
-                    className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#261B6D] hover:bg-[#B2DE81]/20 rounded-xl transition-colors whitespace-nowrap"
+                    className="block px-5 py-2.5 text-sm font-bold text-gray-700 hover:text-[#261B6D] hover:bg-[#B2DE81]/20 transition-colors whitespace-nowrap"
                   >
                     {cat.nameAr}
                   </Link>
                 </li>
               ))}
-              <li className="mr-auto">
-                <Link href="/products?sale=true" className="px-4 py-2 text-sm font-bold text-[#261B6D] hover:bg-[#B2DE81]/30 rounded-xl transition-colors whitespace-nowrap flex items-center gap-1">
+              <li className="mr-auto" style={{ borderLeft: "1px solid #e5e7eb" }}>
+                <Link href="/products?sale=true"
+                  className="block px-5 py-2.5 text-sm font-black text-white whitespace-nowrap"
+                  style={{ background: "#261B6D" }}>
                   ✦ العروض الحصرية
                 </Link>
               </li>
@@ -199,22 +210,24 @@ export function Header() {
 
         {/* قائمة الجوال */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-[#eeedf8] bg-white">
+          <div className="md:hidden" style={{ borderTop: "2px solid #1a1a1a", background: "white" }}>
             <nav className="container-custom py-4">
               <ul className="space-y-1">
-                {categories.map((cat) => (
+                {categories.map(cat => (
                   <li key={cat.slug}>
-                    <Link
-                      href={cat.slug ? `/products?category=${cat.slug}` : "/products"}
-                      className="block px-4 py-3 text-sm font-medium text-[#261B6D] hover:bg-[#B2DE81]/20 rounded-2xl"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
+                    <Link href={cat.slug ? `/products?category=${cat.slug}` : "/products"}
+                      className="block px-4 py-3 text-sm font-bold text-[#261B6D] hover:bg-[#B2DE81]/20 transition-colors"
+                      style={{ borderRadius: "4px" }}
+                      onClick={() => setIsMenuOpen(false)}>
                       {cat.nameAr}
                     </Link>
                   </li>
                 ))}
                 <li>
-                  <Link href="/products?sale=true" className="block px-4 py-3 text-sm font-bold text-[#261B6D] hover:bg-[#B2DE81]/20 rounded-2xl" onClick={() => setIsMenuOpen(false)}>
+                  <Link href="/products?sale=true"
+                    className="block px-4 py-3 text-sm font-black text-white"
+                    style={{ background: "#261B6D", borderRadius: "4px" }}
+                    onClick={() => setIsMenuOpen(false)}>
                     ✦ العروض الحصرية
                   </Link>
                 </li>
