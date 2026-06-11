@@ -64,6 +64,10 @@ export async function getMoyasarPayment(paymentId: string) {
     },
   });
 
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(`Moyasar Error: ${JSON.stringify(error)}`);
+  }
   return response.json();
 }
 
@@ -81,6 +85,10 @@ export async function refundMoyasarPayment(paymentId: string, amount: number) {
     body: JSON.stringify({ amount_cents: amount }),
   });
 
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(`Moyasar Refund Error: ${JSON.stringify(error)}`);
+  }
   return response.json();
 }
 

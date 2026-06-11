@@ -20,13 +20,19 @@ export async function GET() {
 export async function PUT(req: Request) {
   if (!await checkAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const body = await req.json();
-
-  await Promise.all(
-    Object.entries(body).map(([key, value]) =>
-      prisma.setting.update({ where: { key }, data: { value: String(value) } })
-    )
-  );
-
-  return NextResponse.json({ success: true });
+  try {
+    const body = await req.json();
+    await Promise.all(
+      Object.entries(body).map(([key, value]) =>
+        prisma.setting.upsert({
+          where:  { key },
+          update: { value: String(value) },
+          create: { key, value: String(value), group: "general" },
+        })
+      )
+    );
+    return NextResponse.json({ success: true });
+  } catch (e) {
+    return NextResponse.json({ error: "فشل الحفظ" }, { status: 500 });
+  }
 }

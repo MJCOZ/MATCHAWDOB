@@ -72,6 +72,10 @@ export async function getTapCharge(chargeId: string) {
     headers: { Authorization: `Bearer ${secretKey}` },
   });
 
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(`Tap Error: ${JSON.stringify(error)}`);
+  }
   return response.json();
 }
 
@@ -93,5 +97,9 @@ export async function createTapRefund(chargeId: string, amount: number) {
     }),
   });
 
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(`Tap Refund Error: ${JSON.stringify(error)}`);
+  }
   return response.json();
 }
