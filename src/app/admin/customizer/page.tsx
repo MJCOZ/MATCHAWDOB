@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Loader2, Save, ExternalLink, Layout, Palette,
   Store, BarChart3, ChevronDown, ChevronUp, RotateCcw, Check,
-  Monitor, Smartphone, Eye
+  Monitor, Smartphone, Eye, Type
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -28,6 +28,8 @@ interface CustomizerData {
   showOffersSection: boolean;
   showNewProducts: boolean;
   featuresBarText: string;
+  fontFamily: string;
+  fontScale: string;
 }
 
 const DEFAULT: CustomizerData = {
@@ -53,10 +55,28 @@ const DEFAULT: CustomizerData = {
   showOffersSection: true,
   showNewProducts: true,
   featuresBarText: "شحن مجاني للطلبات فوق 200 ر.س • ضمان الجودة 100% • توصيل سريع",
+  fontFamily: "AraHamahHoms",
+  fontScale: "1",
 };
 
-type Tab = "banner" | "colors" | "store" | "stats" | "sections";
+type Tab = "banner" | "colors" | "fonts" | "store" | "stats" | "sections";
 type ViewMode = "desktop" | "mobile";
+
+const FONT_OPTIONS = [
+  { id: "AraHamahHoms", label: "Ara Hamah Homs", labelAr: "آرا حماه حمص", sample: "ماتشا من الفضاء", gfUrl: null },
+  { id: "Tajawal",      label: "Tajawal",        labelAr: "تجوال",          sample: "ماتشا من الفضاء", gfUrl: "https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" },
+  { id: "Cairo",        label: "Cairo",          labelAr: "كايرو",          sample: "ماتشا من الفضاء", gfUrl: "https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" },
+  { id: "Almarai",      label: "Almarai",        labelAr: "المرعي",         sample: "ماتشا من الفضاء", gfUrl: "https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap" },
+  { id: "Readex Pro",   label: "Readex Pro",     labelAr: "ريدكس برو",      sample: "ماتشا من الفضاء", gfUrl: "https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;700&display=swap" },
+  { id: "IBM Plex Sans Arabic", label: "IBM Plex Sans Arabic", labelAr: "IBM بلكس", sample: "ماتشا من الفضاء", gfUrl: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;700&display=swap" },
+];
+
+const SCALE_OPTIONS = [
+  { id: "0.875", label: "صغير",     desc: "14px" },
+  { id: "1",     label: "عادي",     desc: "16px" },
+  { id: "1.125", label: "كبير",     desc: "18px" },
+  { id: "1.25",  label: "كبير جداً", desc: "20px" },
+];
 
 /* ─── مكون حقل الإدخال ─── */
 function Field({ label, value, onChange, placeholder, type = "text", multiline = false }: {
@@ -162,8 +182,20 @@ export default function CustomizerPage() {
   useEffect(() => {
     fetch("/api/admin/customizer")
       .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d) setData(d); })
+      .then(d => { if (d) setData({ ...DEFAULT, ...d }); })
       .finally(() => setLoading(false));
+  }, []);
+
+  // تحميل خطوط Google للمعاينة داخل الكاستمايزر
+  useEffect(() => {
+    FONT_OPTIONS.forEach(f => {
+      if (!f.gfUrl) return;
+      if (document.querySelector(`link[href="${f.gfUrl}"]`)) return;
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = f.gfUrl;
+      document.head.appendChild(link);
+    });
   }, []);
 
   const updateSlide = useCallback((index: number, slide: Slide) => {
@@ -215,6 +247,7 @@ export default function CustomizerPage() {
   const tabs: { id: Tab; label: string; icon: any }[] = [
     { id: "banner",   label: "البنر",       icon: Layout },
     { id: "colors",   label: "الألوان",     icon: Palette },
+    { id: "fonts",    label: "الخطوط",     icon: Type },
     { id: "store",    label: "المتجر",      icon: Store },
     { id: "stats",    label: "الإحصائيات", icon: BarChart3 },
     { id: "sections", label: "الأقسام",    icon: Eye },
@@ -367,6 +400,96 @@ export default function CustomizerPage() {
                         </button>
                       ))}
                     </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* ─── الخطوط ─── */}
+            {activeTab === "fonts" && (
+              <>
+                <p className="text-xs text-gray-400">اختر خط الموقع وحجم النص الأساسي</p>
+
+                {/* اختيار الخط */}
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">نوع الخط</p>
+                  <div className="space-y-2">
+                    {FONT_OPTIONS.map(font => (
+                      <button
+                        key={font.id}
+                        onClick={() => setData({ ...data, fontFamily: font.id })}
+                        className={`w-full flex items-center justify-between p-3 rounded-2xl border-2 transition-all text-right ${
+                          data.fontFamily === font.id
+                            ? "border-[#261B6D] bg-[#261B6D]/5"
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-xs font-semibold text-gray-600">{font.labelAr}</span>
+                          <span className="text-xs text-gray-400">{font.label}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span
+                            style={{ fontFamily: `'${font.id}', sans-serif`, fontSize: "15px" }}
+                            className="text-gray-800"
+                          >
+                            {font.sample}
+                          </span>
+                          {data.fontFamily === font.id && (
+                            <div className="w-5 h-5 rounded-full bg-[#261B6D] flex items-center justify-center flex-shrink-0">
+                              <Check size={11} className="text-white" />
+                            </div>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* حجم الخط */}
+                <div className="pt-2">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">حجم النص</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {SCALE_OPTIONS.map(scale => (
+                      <button
+                        key={scale.id}
+                        onClick={() => setData({ ...data, fontScale: scale.id })}
+                        className={`flex flex-col items-center gap-1 py-4 px-3 rounded-2xl border-2 transition-all ${
+                          data.fontScale === scale.id
+                            ? "border-[#261B6D] bg-[#261B6D]/5"
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
+                      >
+                        <span
+                          style={{
+                            fontFamily: `'${data.fontFamily}', sans-serif`,
+                            fontSize: `calc(${scale.id}rem * 1.1)`,
+                            fontWeight: 700,
+                            color: data.fontScale === scale.id ? "#261B6D" : "#374151",
+                          }}
+                        >
+                          أ
+                        </span>
+                        <span className="text-xs font-semibold text-gray-700">{scale.label}</span>
+                        <span className="text-[10px] text-gray-400">{scale.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* معاينة الخط */}
+                <div className="rounded-2xl border border-gray-200 p-4 bg-gray-50">
+                  <p className="text-xs text-gray-400 mb-3 font-semibold">معاينة</p>
+                  <div style={{ fontFamily: `'${data.fontFamily}', sans-serif` }}>
+                    <p style={{ fontSize: `calc(${data.fontScale}rem * 1.5)`, fontWeight: 700, color: data.primaryColor, marginBottom: "4px" }}>
+                      ماتشا من الفضاء ✦
+                    </p>
+                    <p style={{ fontSize: `calc(${data.fontScale}rem * 1.1)`, color: data.secondaryColor, marginBottom: "8px" }}>
+                      الطعم الياباني الأصيل
+                    </p>
+                    <p style={{ fontSize: `${data.fontScale}rem`, color: "#6b7280", lineHeight: 1.6 }}>
+                      اكتشف مجموعتنا الفريدة من الماتشا الفاخر وأدوات التحضير الأصيلة. نكهة خاصة لكل رشفة.
+                    </p>
                   </div>
                 </div>
               </>

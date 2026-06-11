@@ -15,23 +15,37 @@ export const metadata: Metadata = {
   openGraph: { type: "website", locale: "ar_SA", siteName: "MatchaWdob" },
 };
 
+const GF_URLS: Record<string, string> = {
+  "Tajawal":              "https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap",
+  "Cairo":                "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap",
+  "Almarai":              "https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap",
+  "Readex Pro":           "https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600;700&display=swap",
+  "IBM Plex Sans Arabic": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap",
+};
+
 async function getTheme() {
   try {
     const setting = await prisma.setting.findUnique({ where: { key: "customizer_data" } });
-    if (!setting) return { primary: "#261B6D", secondary: "#B2DE81", bg: "#F8F7FF" };
+    if (!setting) return { primary: "#261B6D", secondary: "#B2DE81", bg: "#F8F7FF", fontFamily: "AraHamahHoms", fontScale: "1" };
     const data = JSON.parse(setting.value);
     return {
-      primary:   data.primaryColor   || "#261B6D",
-      secondary: data.secondaryColor || "#B2DE81",
-      bg:        data.bgColor        || "#F8F7FF",
+      primary:    data.primaryColor   || "#261B6D",
+      secondary:  data.secondaryColor || "#B2DE81",
+      bg:         data.bgColor        || "#F8F7FF",
+      fontFamily: data.fontFamily     || "AraHamahHoms",
+      fontScale:  data.fontScale      || "1",
     };
   } catch {
-    return { primary: "#261B6D", secondary: "#B2DE81", bg: "#F8F7FF" };
+    return { primary: "#261B6D", secondary: "#B2DE81", bg: "#F8F7FF", fontFamily: "AraHamahHoms", fontScale: "1" };
   }
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const theme = await getTheme();
+
+  const gfUrl = GF_URLS[theme.fontFamily];
+  const fontStack = `'${theme.fontFamily}', sans-serif`;
+  const basePx = Math.round(parseFloat(theme.fontScale) * 16);
 
   const themeCSS = `
     :root {
@@ -39,7 +53,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       --theme-secondary: ${theme.secondary};
       --theme-bg:        ${theme.bg};
     }
-    body { background-color: ${theme.bg} !important; }
+    html { font-size: ${basePx}px; }
+    body { background-color: ${theme.bg} !important; font-family: ${fontStack} !important; }
     .btn-primary { background-color: ${theme.primary} !important; }
     .btn-primary:hover { background-color: ${theme.primary}dd !important; }
     .btn-secondary { background-color: ${theme.secondary} !important; color: ${theme.primary} !important; }
@@ -49,9 +64,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="ar" dir="rtl">
       <head>
+        {gfUrl && <link rel="stylesheet" href={gfUrl} />}
         <style dangerouslySetInnerHTML={{ __html: themeCSS }} />
       </head>
-      <body className="text-gray-900 antialiased" style={{ fontFamily: "'AraHamahHoms', sans-serif", backgroundColor: theme.bg }}>
+      <body className="text-gray-900 antialiased" style={{ fontFamily: fontStack, backgroundColor: theme.bg }}>
         <Providers>
           {children}
           <Toaster
@@ -59,7 +75,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             toastOptions={{
               duration: 3000,
               style: {
-                fontFamily: "'AraHamahHoms', sans-serif",
+                fontFamily: fontStack,
                 direction: "rtl",
                 background: theme.primary,
                 color: "#fff",
