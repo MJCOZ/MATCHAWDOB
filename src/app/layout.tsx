@@ -1,8 +1,8 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "react-hot-toast";
-import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: {
@@ -23,8 +23,12 @@ const GF_URLS: Record<string, string> = {
   "IBM Plex Sans Arabic": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap",
 };
 
+const THEME_DEFAULTS = { primary: "#261B6D", secondary: "#B2DE81", bg: "#FAFAF5", fontFamily: "AraHamahHoms", fontScale: "1" };
+
 async function getTheme() {
+  if (!process.env.DATABASE_URL) return THEME_DEFAULTS;
   try {
+    const { prisma } = await import("@/lib/prisma");
     const setting = await prisma.setting.findUnique({ where: { key: "customizer_data" } });
     if (!setting) return { primary: "#261B6D", secondary: "#B2DE81", bg: "#F8F7FF", fontFamily: "AraHamahHoms", fontScale: "1" };
     const data = JSON.parse(setting.value);
@@ -36,7 +40,7 @@ async function getTheme() {
       fontScale:  data.fontScale      || "1",
     };
   } catch {
-    return { primary: "#261B6D", secondary: "#B2DE81", bg: "#F8F7FF", fontFamily: "AraHamahHoms", fontScale: "1" };
+    return THEME_DEFAULTS;
   }
 }
 
