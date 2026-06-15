@@ -6,6 +6,7 @@ import {
   Monitor, Smartphone, Eye, Type
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 /* ─── أنواع البيانات ─── */
 interface Slide {
@@ -124,7 +125,13 @@ function SlideAccordion({ index, slide, onChange }: { index: number; slide: Slid
             <Field label="رابط الزر" value={slide.ctaLink} onChange={v => onChange({ ...slide, ctaLink: v })} placeholder="/products" />
           </div>
           <Field label="شارة (badge)" value={slide.badge} onChange={v => onChange({ ...slide, badge: v })} placeholder="✦ جديد ومميز" />
-          <Field label="رابط صورة البنر (اختياري)" value={slide.image || ""} onChange={v => onChange({ ...slide, image: v })} placeholder="https://example.com/image.png" />
+          <ImageUploader
+            label="صورة البنر (اختياري)"
+            value={slide.image || ""}
+            onChange={v => onChange({ ...slide, image: v })}
+            shape="wide"
+            hint="ارفع صورتك الخاصة من تصميمك، أو ألصق رابطاً خارجياً. تظهر بجانب نص البنر."
+          />
           <div>
             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">الشخصية</label>
             <div className="flex gap-2">

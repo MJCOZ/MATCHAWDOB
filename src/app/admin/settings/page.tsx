@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Save, Loader2, Settings } from "lucide-react";
+import { Save, Loader2, Settings, ImageIcon } from "lucide-react";
 import toast from "react-hot-toast";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 interface Setting { key: string; value: string; group: string; }
 
@@ -76,6 +77,38 @@ export default function AdminSettingsPage() {
       </div>
 
       <form onSubmit={handleSave} className="space-y-6">
+
+        {/* هوية المتجر — الشعار / البروفايل والنص أسفله */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+            <ImageIcon size={16} className="text-[#261B6D]" />
+            هوية المتجر (الشعار والبروفايل)
+          </h2>
+          <p className="text-xs text-gray-400 -mt-2">
+            صورة البروفايل تظهر في الهيدر والفوتر. اتركها فارغة لاستخدام شعار الدب الافتراضي.
+          </p>
+
+          <ImageUploader
+            label="صورة البروفايل / الشعار"
+            value={values.store_logo || ""}
+            onChange={(v) => setValues({ ...values, store_logo: v })}
+            shape="circle"
+            hint="يفضّل صورة مربعة بخلفية شفافة (PNG)، بحجم 200×200 بكسل أو أكبر."
+          />
+
+          <div>
+            <label className="text-sm font-medium text-gray-700 block mb-1.5">
+              النص أسفل الشعار (الوصف القصير)
+            </label>
+            <input
+              className="input-field"
+              value={values.store_tagline ?? "عالم الماتشا الياباني ✦"}
+              onChange={(e) => setValues({ ...values, store_tagline: e.target.value })}
+              placeholder="عالم الماتشا الياباني ✦"
+            />
+          </div>
+        </div>
+
         {groups.map((group) => (
           <div key={group} className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
             <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
