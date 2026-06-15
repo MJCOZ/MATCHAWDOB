@@ -36,14 +36,14 @@ export function ProductFilters({ categories, currentParams }: FilterProps) {
       {/* التصنيفات */}
       <div>
         <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-          <span className="w-1.5 h-4 bg-orange-500 rounded-full"></span>
+          <span className="w-1.5 h-4 bg-[#B2DE81] rounded-none"></span>
           التصنيفات
         </h3>
         <div className="space-y-1">
           <Link
             href="/products"
             className={`block text-sm px-3 py-2 rounded-lg transition-colors ${
-              !currentParams.category ? "bg-orange-50 text-orange-600 font-semibold" : "text-gray-600 hover:bg-gray-50"
+              !currentParams.category ? "bg-[#eeedf8] text-[#261B6D] font-black" : "text-gray-600 hover:bg-gray-50"
             }`}
           >
             جميع المنتجات
@@ -53,7 +53,7 @@ export function ProductFilters({ categories, currentParams }: FilterProps) {
               key={cat.id}
               href={`/products?category=${cat.slug}`}
               className={`block text-sm px-3 py-2 rounded-lg transition-colors ${
-                currentParams.category === cat.slug ? "bg-orange-50 text-orange-600 font-semibold" : "text-gray-600 hover:bg-gray-50"
+                currentParams.category === cat.slug ? "bg-[#eeedf8] text-[#261B6D] font-black" : "text-gray-600 hover:bg-gray-50"
               }`}
             >
               {cat.nameAr}
@@ -65,7 +65,7 @@ export function ProductFilters({ categories, currentParams }: FilterProps) {
       {/* نطاق السعر */}
       <div>
         <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-          <span className="w-1.5 h-4 bg-orange-500 rounded-full"></span>
+          <span className="w-1.5 h-4 bg-[#B2DE81] rounded-none"></span>
           السعر
         </h3>
         <div className="space-y-2">
@@ -86,7 +86,7 @@ export function ProductFilters({ categories, currentParams }: FilterProps) {
               }}
               className={`block text-sm w-full text-right px-3 py-2 rounded-lg transition-colors ${
                 currentParams.minPrice === range.min && currentParams.maxPrice === range.max
-                  ? "bg-orange-50 text-orange-600 font-semibold"
+                  ? "bg-[#eeedf8] text-[#261B6D] font-black"
                   : "text-gray-600 hover:bg-gray-50"
               }`}
             >
@@ -99,7 +99,7 @@ export function ProductFilters({ categories, currentParams }: FilterProps) {
       {/* فلاتر إضافية */}
       <div>
         <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-          <span className="w-1.5 h-4 bg-orange-500 rounded-full"></span>
+          <span className="w-1.5 h-4 bg-[#B2DE81] rounded-none"></span>
           فلاتر إضافية
         </h3>
         <div className="space-y-2">
@@ -113,11 +113,11 @@ export function ProductFilters({ categories, currentParams }: FilterProps) {
               onClick={() => updateFilter(filter.key, currentParams[filter.key] === filter.value ? null : filter.value)}
               className={`flex items-center gap-2 text-sm w-full px-3 py-2 rounded-lg transition-colors ${
                 currentParams[filter.key] === filter.value
-                  ? "bg-orange-50 text-orange-600 font-semibold"
+                  ? "bg-[#eeedf8] text-[#261B6D] font-black"
                   : "text-gray-600 hover:bg-gray-50"
               }`}
             >
-              <div className={`w-4 h-4 rounded border ${currentParams[filter.key] === filter.value ? "bg-orange-500 border-orange-500" : "border-gray-300"} flex items-center justify-center`}>
+              <div className={`w-4 h-4 rounded border ${currentParams[filter.key] === filter.value ? "bg-[#261B6D] border-[#261B6D]" : "border-gray-300"} flex items-center justify-center`}>
                 {currentParams[filter.key] === filter.value && <span className="text-white text-xs">✓</span>}
               </div>
               {filter.label}

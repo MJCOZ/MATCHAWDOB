@@ -6,9 +6,11 @@ import { FeaturedProducts } from "@/components/shop/FeaturedProducts";
 import { OffersSection } from "@/components/shop/OffersSection";
 import { NewProducts } from "@/components/shop/NewProducts";
 import { FeaturesBar } from "@/components/shop/FeaturesBar";
+import { WhyUsSection } from "@/components/shop/WhyUsSection";
+import { TestimonialsSection } from "@/components/shop/TestimonialsSection";
+import { NewsletterSection } from "@/components/shop/NewsletterSection";
 
 export default async function HomePage() {
-  // جلب البيانات بشكل متوازٍ لتسريع الصفحة
   const [categories, featuredProducts, newProducts, saleProducts] = await Promise.all([
     prisma.category.findMany({
       where: { isActive: true, parentId: null },
@@ -16,21 +18,18 @@ export default async function HomePage() {
       take: 8,
       include: { _count: { select: { products: { where: { isActive: true } } } } },
     }),
-
     prisma.product.findMany({
       where: { isActive: true, isFeatured: true, stock: { gt: 0 } },
       orderBy: { createdAt: "desc" },
       take: 8,
       include: { category: { select: { nameAr: true, slug: true } } },
     }),
-
     prisma.product.findMany({
       where: { isActive: true, isNew: true, stock: { gt: 0 } },
       orderBy: { createdAt: "desc" },
       take: 8,
       include: { category: { select: { nameAr: true, slug: true } } },
     }),
-
     prisma.product.findMany({
       where: { isActive: true, salePrice: { not: null }, stock: { gt: 0 } },
       orderBy: { createdAt: "desc" },
@@ -39,7 +38,6 @@ export default async function HomePage() {
     }),
   ]);
 
-  // تحويل Decimal إلى number
   const serialize = (products: any[]) =>
     products.map((p) => ({
       ...p,
@@ -49,8 +47,8 @@ export default async function HomePage() {
     }));
 
   return (
-    <div className="animate-fadeInUp">
-      {/* شريط المميزات */}
+    <div>
+      {/* شريط الثقة */}
       <FeaturesBar />
 
       {/* البانر الرئيسي */}
@@ -64,15 +62,24 @@ export default async function HomePage() {
         <FeaturedProducts products={serialize(featuredProducts)} />
       )}
 
+      {/* لماذا نحن */}
+      <WhyUsSection />
+
       {/* قسم العروض */}
       {saleProducts.length > 0 && (
         <OffersSection products={serialize(saleProducts)} />
       )}
 
+      {/* التقييمات */}
+      <TestimonialsSection />
+
       {/* المنتجات الجديدة */}
       {newProducts.length > 0 && (
         <NewProducts products={serialize(newProducts)} />
       )}
+
+      {/* النشرة البريدية */}
+      <NewsletterSection />
     </div>
   );
 }
