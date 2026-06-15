@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 interface Slide {
   title: string; subtitle: string; description: string;
   cta: string; ctaLink: string; badge: string; mascot: string;
+  image?: string;
 }
 interface Stat { num: string; label: string; }
 interface CustomizerData {
@@ -34,9 +35,9 @@ interface CustomizerData {
 
 const DEFAULT: CustomizerData = {
   slides: [
-    { title: "ماتشا من الفضاء", subtitle: "الطعم الياباني الأصيل", description: "اكتشف مجموعتنا الفريدة من الماتشا الفاخر وأدوات التحضير الأصيلة", cta: "تسوق الآن", ctaLink: "/products", badge: "✦ جديد ومميز", mascot: "wave" },
-    { title: "ماتشا من الفضاء", subtitle: "من اليابان مباشرةً إليك", description: "أفضل أنواع الماتشا من مزارع اليابان الشهيرة — نكهة خاصة لكل رشفة", cta: "اكتشف الآن", ctaLink: "/products?category=matcha-powder", badge: "🍵 ماتشا أصيل", mascot: "alien" },
-    { title: "ماتشا من الفضاء", subtitle: "هدايا كيوت ومميزة", description: "أطقم هدايا فاخرة بتصميم ياباني راقٍ — لكل مناسبة خاصة", cta: "العروض الحصرية", ctaLink: "/products?sale=true", badge: "✦ عروض محدودة", mascot: "surprised" },
+    { title: "ماتشا من الفضاء", subtitle: "الطعم الياباني الأصيل", description: "اكتشف مجموعتنا الفريدة من الماتشا الفاخر وأدوات التحضير الأصيلة", cta: "تسوق الآن", ctaLink: "/products", badge: "✦ جديد ومميز", mascot: "wave", image: "" },
+    { title: "ماتشا من الفضاء", subtitle: "من اليابان مباشرةً إليك", description: "أفضل أنواع الماتشا من مزارع اليابان الشهيرة — نكهة خاصة لكل رشفة", cta: "اكتشف الآن", ctaLink: "/products?category=matcha-powder", badge: "🍵 ماتشا أصيل", mascot: "alien", image: "" },
+    { title: "ماتشا من الفضاء", subtitle: "هدايا كيوت ومميزة", description: "أطقم هدايا فاخرة بتصميم ياباني راقٍ — لكل مناسبة خاصة", cta: "العروض الحصرية", ctaLink: "/products?sale=true", badge: "✦ عروض محدودة", mascot: "surprised", image: "" },
   ],
   primaryColor: "#261B6D",
   secondaryColor: "#B2DE81",
@@ -123,6 +124,7 @@ function SlideAccordion({ index, slide, onChange }: { index: number; slide: Slid
             <Field label="رابط الزر" value={slide.ctaLink} onChange={v => onChange({ ...slide, ctaLink: v })} placeholder="/products" />
           </div>
           <Field label="شارة (badge)" value={slide.badge} onChange={v => onChange({ ...slide, badge: v })} placeholder="✦ جديد ومميز" />
+          <Field label="رابط صورة البنر (اختياري)" value={slide.image || ""} onChange={v => onChange({ ...slide, image: v })} placeholder="https://example.com/image.png" />
           <div>
             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">الشخصية</label>
             <div className="flex gap-2">
@@ -295,17 +297,20 @@ export default function CustomizerPage() {
         {/* ─── اللوحة اليسرى - التحرير ─── */}
         <div className="w-[380px] flex-shrink-0 bg-white border-l border-gray-100 flex flex-col overflow-hidden">
 
-          {/* تبويبات */}
-          <div className="flex border-b border-gray-100 overflow-x-auto scrollbar-hide">
+          {/* تبويبات - شبكة 3×2 */}
+          <div className="grid grid-cols-3 flex-shrink-0 border-b border-gray-100">
             {tabs.map(tab => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-3 py-3 text-xs font-semibold whitespace-nowrap transition-colors flex-shrink-0 border-b-2 ${
+                className={`flex flex-col items-center justify-center gap-1.5 py-3 text-xs font-bold transition-all relative ${
                   activeTab === tab.id
-                    ? "border-[#261B6D] text-[#261B6D]"
-                    : "border-transparent text-gray-400 hover:text-gray-600"
+                    ? "text-[#261B6D] bg-[#261B6D]/5"
+                    : "text-gray-400 hover:bg-gray-50 hover:text-gray-600"
                 }`}>
-                <tab.icon size={13} />
-                {tab.label}
+                {activeTab === tab.id && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#261B6D] rounded-full" />
+                )}
+                <tab.icon size={16} />
+                <span>{tab.label}</span>
               </button>
             ))}
           </div>
@@ -316,7 +321,13 @@ export default function CustomizerPage() {
             {/* ─── البنر ─── */}
             {activeTab === "banner" && (
               <>
-                <p className="text-xs text-gray-400">عدّل نصوص كل شريحة من شرائح البنر الرئيسي</p>
+                <p className="text-xs text-gray-400">عدّل السلوقن وشرائح البنر الرئيسي</p>
+
+                {/* سلوقن البراند - ظاهر في الهيدر */}
+                <div className="p-3 rounded-2xl border-2 border-[#261B6D]/20 bg-[#261B6D]/5">
+                  <Field label="✦ سلوقن البراند" value={data.slogan} onChange={v => setData({ ...data, slogan: v })} placeholder="ماتشا من الفضاء" />
+                </div>
+
                 {data.slides.map((slide, i) => (
                   <SlideAccordion key={i} index={i} slide={slide} onChange={s => updateSlide(i, s)} />
                 ))}

@@ -6,6 +6,7 @@ import { ChevronRight, ChevronLeft, ShoppingBag, Sparkles } from "lucide-react";
 interface Slide {
   title: string; subtitle: string; description: string;
   cta: string; ctaLink: string; badge: string; mascot: string;
+  image?: string;
 }
 interface Stat { num: string; label: string; }
 interface BannerSettings { slides?: Slide[]; stats?: Stat[]; }
@@ -120,6 +121,14 @@ export function HeroBanner() {
 
       {/* ضباب كوني */}
       <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-[#352a8a]/40 blur-3xl pointer-events-none" />
+
+      {/* صورة الشريحة إن وجدت */}
+      {slide.image && (
+        <div className="absolute bottom-16 left-6 md:left-16 hidden md:flex items-end justify-center z-10 w-60 h-60 lg:w-80 lg:h-80">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={slide.image} alt={slide.title} className="w-full h-full object-contain drop-shadow-2xl" />
+        </div>
+      )}
 
       {/* المحتوى */}
       <div className="container-custom py-16 md:py-24 relative z-10">
