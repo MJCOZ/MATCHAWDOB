@@ -14,7 +14,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (!await checkAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const body = await req.json();
-    const allowed = ["isActive", "usageLimit", "discount", "discountType", "expiresAt"];
+    const allowed = ["isActive", "usageLimit", "value", "type", "expiresAt", "minOrderAmount", "maxDiscount"];
     const safe = Object.fromEntries(Object.entries(body).filter(([k]) => allowed.includes(k)));
     const coupon = await prisma.coupon.update({ where: { id: params.id }, data: safe });
     return NextResponse.json(coupon);

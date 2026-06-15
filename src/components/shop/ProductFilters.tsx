@@ -78,8 +78,11 @@ export function ProductFilters({ categories, currentParams }: FilterProps) {
             <button
               key={range.label}
               onClick={() => {
-                updateFilter("minPrice", range.min || null);
-                updateFilter("maxPrice", range.max || null);
+                const params = new URLSearchParams(searchParams.toString());
+                if (range.min) params.set("minPrice", range.min); else params.delete("minPrice");
+                if (range.max) params.set("maxPrice", range.max); else params.delete("maxPrice");
+                params.delete("page");
+                router.push(`/products?${params.toString()}`);
               }}
               className={`block text-sm w-full text-right px-3 py-2 rounded-lg transition-colors ${
                 currentParams.minPrice === range.min && currentParams.maxPrice === range.max

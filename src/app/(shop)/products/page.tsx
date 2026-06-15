@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic';
+import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { ProductFilters } from "@/components/shop/ProductFilters";
@@ -89,7 +90,9 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
       <div className="flex flex-col lg:flex-row gap-8">
         {/* الفلاتر - الجانب */}
         <aside className="w-full lg:w-64 flex-shrink-0">
-          <ProductFilters categories={categories as any} currentParams={searchParams as any} />
+          <Suspense fallback={<div className="h-64 bg-white rounded-2xl border border-gray-100 animate-pulse" />}>
+            <ProductFilters categories={categories as any} currentParams={searchParams as any} />
+          </Suspense>
         </aside>
 
         {/* المنتجات */}
@@ -131,11 +134,11 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
                 <a
                   key={p}
                   href={`?${new URLSearchParams({ ...searchParams, page: p.toString() })}`}
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-semibold transition-colors ${
-                    p === page
-                      ? "bg-orange-500 text-white shadow-md"
-                      : "bg-white border border-gray-200 text-gray-700 hover:border-orange-300"
-                  }`}
+                  className="w-10 h-10 flex items-center justify-center text-sm font-black transition-all"
+                  style={p === page
+                    ? { background: "#261B6D", color: "#fff", border: "2px solid #1a1a1a", boxShadow: "3px 3px 0 #1a1a1a", borderRadius: "4px" }
+                    : { background: "#fff", color: "#261B6D", border: "2px solid #1a1a1a", boxShadow: "2px 2px 0 #1a1a1a", borderRadius: "4px" }
+                  }
                 >
                   {p}
                 </a>
