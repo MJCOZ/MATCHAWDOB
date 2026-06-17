@@ -6,8 +6,13 @@ export async function POST(req: Request) {
   try {
     const { code, subtotal } = await req.json();
 
-    if (!code) {
+    if (!code || typeof code !== "string") {
       return NextResponse.json({ error: "كوبون الخصم مطلوب" }, { status: 400 });
+    }
+
+    const safeSubtotal = Number(subtotal);
+    if (!Number.isFinite(safeSubtotal) || safeSubtotal < 0) {
+      return NextResponse.json({ error: "بيانات السلة غير صالحة" }, { status: 400 });
     }
 
     const coupon = await prisma.coupon.findUnique({ where: { code: code.toUpperCase() } });
@@ -28,7 +33,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "تجاوز هذا الكوبون الحد الأقصى للاستخدام" }, { status: 400 });
     }
 
-    if (coupon.minOrderAmount && subtotal < Number(coupon.minOrderAmount)) {
+    if (coupon.minOrderAmount && safeSubtotal < Number(coupon.minOrderAmount)) {
       return NextResponse.json({
         error: `الحد الأدنى للطلب ${coupon.minOrderAmount} ريال لاستخدام هذا الكوبون`
       }, { status: 400 });

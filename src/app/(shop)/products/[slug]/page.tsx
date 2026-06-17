@@ -11,9 +11,23 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = await prisma.product.findUnique({ where: { slug: params.slug } });
   if (!product) return { title: "المنتج غير موجود" };
+
+  const description = product.descriptionAr || `اشترِ ${product.nameAr} من متجرنا`;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const url = `${baseUrl}/products/${product.slug}`;
+  const image = product.mainImage || undefined;
+
   return {
     title: product.nameAr,
-    description: product.descriptionAr || `اشترِ ${product.nameAr} من متجرنا`,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      title: product.nameAr,
+      description,
+      url,
+      images: image ? [{ url: image }] : undefined,
+    },
   };
 }
 
@@ -62,5 +76,29 @@ export default async function ProductPage({ params }: Props) {
     images: [],
   }));
 
-  return <ProductDetail product={serialized as any} related={serializedRelated as any} />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.nameAr,
+    description: product.descriptionAr || undefined,
+    image: product.mainImage || undefined,
+    sku: product.sku || undefined,
+    category: product.category.nameAr,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "SAR",
+      price: Number(product.salePrice ?? product.price),
+      availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ProductDetail product={serialized as any} related={serializedRelated as any} />
+    </>
+  );
 }

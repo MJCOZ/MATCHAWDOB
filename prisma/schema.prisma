@@ -98,6 +98,7 @@ model Address {
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   orders Order[]
 
+  @@index([userId])
   @@map("addresses")
 }
 
@@ -159,6 +160,7 @@ model Product {
   reviews    Review[]
   cartItems  CartItem[]
 
+  @@index([categoryId])
   @@map("products")
 }
 
@@ -217,6 +219,8 @@ model Order {
   payment   Payment?
   shipping  Shipping?
 
+  @@index([userId])
+  @@index([userId, couponCode])
   @@map("orders")
 }
 
@@ -236,6 +240,8 @@ model OrderItem {
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id])
 
+  @@index([orderId])
+  @@index([productId])
   @@map("order_items")
 }
 

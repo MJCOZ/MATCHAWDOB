@@ -1,5 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getMoyasarPayment } from "@/lib/payments/moyasar";
 import { getTapCharge } from "@/lib/payments/tap";
@@ -16,6 +18,13 @@ export async function GET(req: Request) {
   }
 
   try {
+    const session = await getServerSession(authOptions);
+    const order = await prisma.order.findUnique({ where: { id: orderId }, select: { userId: true } });
+
+    if (!order || (session?.user && (session.user as any).id !== order.userId)) {
+      return NextResponse.redirect(new URL("/orders", req.url));
+    }
+
     const payment = await prisma.payment.findUnique({ where: { orderId } });
 
     if (!payment) {

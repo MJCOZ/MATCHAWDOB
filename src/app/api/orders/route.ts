@@ -7,6 +7,11 @@ import { generateOrderNumber } from "@/lib/utils";
 import { createMoyasarPayment } from "@/lib/payments/moyasar";
 import { createTapCharge } from "@/lib/payments/tap";
 
+// تطابق منطق حساب الشحن والضريبة في src/store/cartStore.ts — مصدر الحقيقة الوحيد للسعر هو الخادم
+const FREE_SHIPPING_THRESHOLD = 200;
+const DEFAULT_SHIPPING_COST = 30;
+const VAT_RATE = 0.15;
+
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -20,23 +25,82 @@ export async function POST(req: Request) {
     const {
       addressId, shippingFullName, shippingPhone, shippingCity, shippingDistrict, shippingStreet,
       useNewAddress, shippingMethod, paymentMethod, notes, couponCode,
-      items, subtotal, discount, shippingCost, tax, total,
+      items,
     } = body;
 
     if (!items?.length) {
       return NextResponse.json({ error: "السلة فارغة" }, { status: 400 });
     }
 
-    // التحقق من المنتجات والمخزون
+    // نحسب الأسعار والمخزون من قاعدة البيانات فقط، ولا نثق بأي قيمة سعر يرسلها العميل
+    const products = await prisma.product.findMany({
+      where: { id: { in: items.map((i: any) => i.productId) } },
+    });
+    const productMap = new Map(products.map((p) => [p.id, p]));
+
+    let subtotal = 0;
+    const resolvedItems: { productId: string; quantity: number; price: number }[] = [];
     for (const item of items) {
-      const product = await prisma.product.findUnique({ where: { id: item.productId } });
+      const product = productMap.get(item.productId);
+      const quantity = Number(item.quantity);
       if (!product || !product.isActive) {
-        return NextResponse.json({ error: `المنتج غير متاح` }, { status: 400 });
+        return NextResponse.json({ error: "المنتج غير متاح" }, { status: 400 });
       }
-      if (product.stock < item.quantity) {
+      if (!Number.isInteger(quantity) || quantity < 1) {
+        return NextResponse.json({ error: "كمية غير صالحة" }, { status: 400 });
+      }
+      if (product.stock < quantity) {
         return NextResponse.json({ error: `المخزون غير كافٍ لـ ${product.nameAr}` }, { status: 400 });
       }
+      const price = Number(product.salePrice ?? product.price);
+      subtotal += price * quantity;
+      resolvedItems.push({ productId: product.id, quantity, price });
     }
+
+    // التحقق من الكوبون وحساب الخصم من بيانات الكوبون الفعلية في قاعدة البيانات فقط
+    let discount = 0;
+    let isFreeShipping = false;
+    let validCouponCode: string | null = null;
+    if (couponCode) {
+      const coupon = await prisma.coupon.findUnique({ where: { code: String(couponCode).toUpperCase() } });
+      const now = new Date();
+      const couponUsable =
+        !!coupon &&
+        coupon.isActive &&
+        (!coupon.expiresAt || coupon.expiresAt > now) &&
+        (!coupon.usageLimit || coupon.usageCount < coupon.usageLimit) &&
+        (!coupon.minOrderAmount || subtotal >= Number(coupon.minOrderAmount));
+
+      if (!couponUsable || !coupon) {
+        return NextResponse.json({ error: "كوبون الخصم غير صالح" }, { status: 400 });
+      }
+
+      if (coupon.userLimit) {
+        const usedByUser = await prisma.order.count({
+          where: { userId, couponCode: coupon.code, status: { not: "CANCELLED" } },
+        });
+        if (usedByUser >= coupon.userLimit) {
+          return NextResponse.json({ error: "لقد استخدمت هذا الكوبون من قبل" }, { status: 400 });
+        }
+      }
+
+      validCouponCode = coupon.code;
+      if (coupon.type === "PERCENTAGE") {
+        discount = (subtotal * Number(coupon.value)) / 100;
+      } else if (coupon.type === "FIXED") {
+        discount = Math.min(Number(coupon.value), subtotal);
+      } else if (coupon.type === "FREE_SHIPPING") {
+        isFreeShipping = true;
+      }
+      if (coupon.maxDiscount) {
+        discount = Math.min(discount, Number(coupon.maxDiscount));
+      }
+    }
+
+    const shippingCost = isFreeShipping ? 0 : subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : DEFAULT_SHIPPING_COST;
+    const afterDiscount = subtotal - discount;
+    const tax = afterDiscount * VAT_RATE;
+    const total = afterDiscount + tax + shippingCost;
 
     // جلب بيانات العنوان
     let shippingAddress: any = {};
@@ -56,60 +120,76 @@ export async function POST(req: Request) {
     }
 
     // إنشاء الطلب
-    const order = await prisma.$transaction(async (tx) => {
-      const newOrder = await tx.order.create({
-        data: {
-          orderNumber: generateOrderNumber(),
-          userId,
-          addressId: addressId || undefined,
-          status: "PENDING",
-          paymentStatus: paymentMethod === "cod" ? "PENDING" : "PENDING",
-          paymentMethod,
-          shippingMethod,
-          subtotal,
-          shippingCost,
-          discount,
-          tax,
-          total,
-          notes,
-          couponCode,
-          couponDiscount: discount || undefined,
-          ...shippingAddress,
-          items: {
-            create: items.map((item: any) => ({
-              productId: item.productId,
-              productName: item.productName || "",
-              quantity: item.quantity,
-              price: item.price,
-              total: item.price * item.quantity,
-            })),
+    let order;
+    try {
+      order = await prisma.$transaction(async (tx) => {
+        // خصم المخزون بشكل ذرّي (تحقّق وتحديث في استعلام واحد) لمنع البيع الزائد عند الطلبات المتزامنة
+        for (const item of resolvedItems) {
+          const result = await tx.product.updateMany({
+            where: { id: item.productId, stock: { gte: item.quantity } },
+            data: { stock: { decrement: item.quantity } },
+          });
+          if (result.count === 0) {
+            throw new Error(`STOCK:${item.productId}`);
+          }
+        }
+
+        const newOrder = await tx.order.create({
+          data: {
+            orderNumber: generateOrderNumber(),
+            userId,
+            addressId: addressId || undefined,
+            status: "PENDING",
+            paymentStatus: "PENDING",
+            paymentMethod,
+            shippingMethod,
+            subtotal,
+            shippingCost,
+            discount,
+            tax,
+            total,
+            notes,
+            couponCode: validCouponCode || undefined,
+            couponDiscount: discount || undefined,
+            ...shippingAddress,
+            items: {
+              create: resolvedItems.map((item) => {
+                const product = productMap.get(item.productId)!;
+                return {
+                  productId: item.productId,
+                  productName: product.nameAr,
+                  productImage: product.mainImage,
+                  quantity: item.quantity,
+                  price: item.price,
+                  total: item.price * item.quantity,
+                };
+              }),
+            },
           },
-        },
-        include: { items: { include: { product: true } } },
+          include: { items: { include: { product: true } } },
+        });
+
+        // تحديث عداد استخدام الكوبون
+        if (validCouponCode) {
+          await tx.coupon.updateMany({
+            where: { code: validCouponCode },
+            data: { usageCount: { increment: 1 } },
+          });
+        }
+
+        return newOrder;
       });
-
-      // تحديث المخزون وأسماء المنتجات
-      for (const item of newOrder.items) {
-        await tx.product.update({
-          where: { id: item.productId },
-          data: { stock: { decrement: item.quantity } },
-        });
-        await tx.orderItem.update({
-          where: { id: item.id },
-          data: { productName: item.product.nameAr, productImage: item.product.mainImage },
-        });
+    } catch (e: any) {
+      if (typeof e?.message === "string" && e.message.startsWith("STOCK:")) {
+        const productId = e.message.split(":")[1];
+        const product = productMap.get(productId);
+        return NextResponse.json(
+          { error: `المخزون غير كافٍ لـ ${product?.nameAr || "أحد المنتجات"}` },
+          { status: 400 }
+        );
       }
-
-      // تحديث عداد استخدام الكوبون
-      if (couponCode) {
-        await tx.coupon.updateMany({
-          where: { code: couponCode },
-          data: { usageCount: { increment: 1 } },
-        });
-      }
-
-      return newOrder;
-    });
+      throw e;
+    }
 
     // إنشاء سجل الشحن
     await prisma.shipping.create({
