@@ -1,6 +1,6 @@
 "use client";
-import { useRef, useState } from "react";
-import { Upload, Loader2, X, Link as LinkIcon, Crop } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Upload, Loader2, X, Link as LinkIcon, Crop, AlertTriangle } from "lucide-react";
 import toast from "react-hot-toast";
 import { ImageCropModal } from "./ImageCropModal";
 
@@ -20,10 +20,13 @@ export function ImageUploader({ label, value, onChange, shape = "wide", hint, as
   const [uploading, setUploading] = useState(false);
   const [showUrl, setShowUrl] = useState(false);
   const [cropSrc, setCropSrc] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState(false);
   const objectUrlRef = useRef<string | null>(null);
 
   const cropAspect = aspect ?? 1;
   const isCircle = shape === "circle";
+
+  useEffect(() => setLoadError(false), [value]);
 
   const uploadBlob = async (blob: Blob, filename: string) => {
     setUploading(true);
@@ -83,12 +86,26 @@ export function ImageUploader({ label, value, onChange, shape = "wide", hint, as
       )}
 
       {/* المعاينة */}
-      {value ? (
+      {value && loadError ? (
+        <div className={`${previewClasses} flex flex-col items-center justify-center gap-1 border-2 border-dashed border-red-300 bg-red-50 text-red-400 relative px-2 text-center`}>
+          <AlertTriangle size={18} />
+          <span className="text-[10px] font-semibold leading-tight">تعذّر تحميل الصورة، أعد رفعها</span>
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center shadow-md hover:bg-red-600 transition-colors"
+            aria-label="حذف الصورة"
+          >
+            <X size={13} />
+          </button>
+        </div>
+      ) : value ? (
         <div className="relative inline-block group">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={value}
             alt="معاينة"
+            onError={() => setLoadError(true)}
             className={`${previewClasses} object-cover border-2 border-gray-200 bg-gray-50`}
           />
           <button
