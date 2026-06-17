@@ -1,36 +1,35 @@
 "use client";
 import { useRef, useState } from "react";
-import { Upload, Loader2, X, Link as LinkIcon } from "lucide-react";
+import { Upload, Loader2, X, Link as LinkIcon, Crop } from "lucide-react";
 import toast from "react-hot-toast";
+import { ImageCropModal } from "./ImageCropModal";
 
 interface ImageUploaderProps {
   label?: string;
   value: string;
   onChange: (url: string) => void;
-  /** نسبة المعاينة: square أو wide */
+  /** نسبة المعاينة: square أو wide أو circle */
   shape?: "square" | "wide" | "circle";
   hint?: string;
+  /** نسبة العرض إلى الارتفاع لإطار القص (افتراضي 1:1) */
+  aspect?: number;
 }
 
-export function ImageUploader({ label, value, onChange, shape = "wide", hint }: ImageUploaderProps) {
+export function ImageUploader({ label, value, onChange, shape = "wide", hint, aspect }: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [showUrl, setShowUrl] = useState(false);
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
 
-  const handleFile = async (file: File) => {
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      toast.error("يرجى اختيار ملف صورة");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("حجم الصورة يتجاوز 5 ميجابايت");
-      return;
-    }
+  const cropAspect = aspect ?? 1;
+  const isCircle = shape === "circle";
+
+  const uploadBlob = async (blob: Blob, filename: string) => {
     setUploading(true);
     try {
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", blob, filename);
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const json = await res.json();
       if (!res.ok) throw new Error(json?.error || "فشل الرفع");
@@ -41,6 +40,33 @@ export function ImageUploader({ label, value, onChange, shape = "wide", hint }: 
     } finally {
       setUploading(false);
     }
+  };
+
+  const openFileForCrop = (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      toast.error("يرجى اختيار ملف صورة");
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      toast.error("حجم الصورة يتجاوز 8 ميجابايت");
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    objectUrlRef.current = url;
+    setCropSrc(url);
+  };
+
+  const closeCropper = () => {
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
+    }
+    setCropSrc(null);
+  };
+
+  const handleCropConfirm = (blob: Blob) => {
+    closeCropper();
+    uploadBlob(blob, `image-${Date.now()}.jpg`);
   };
 
   const previewClasses =
@@ -65,6 +91,14 @@ export function ImageUploader({ label, value, onChange, shape = "wide", hint }: 
             alt="معاينة"
             className={`${previewClasses} object-cover border-2 border-gray-200 bg-gray-50`}
           />
+          <button
+            type="button"
+            onClick={() => setCropSrc(value)}
+            className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#261B6D] text-white flex items-center justify-center shadow-md hover:bg-[#352a8a] transition-colors"
+            aria-label="تحرير/قص الصورة"
+          >
+            <Crop size={12} />
+          </button>
           <button
             type="button"
             onClick={() => onChange("")}
@@ -127,10 +161,20 @@ export function ImageUploader({ label, value, onChange, shape = "wide", hint }: 
         className="hidden"
         onChange={(e) => {
           const f = e.target.files?.[0];
-          if (f) handleFile(f);
+          if (f) openFileForCrop(f);
           e.target.value = "";
         }}
       />
+
+      {cropSrc && (
+        <ImageCropModal
+          src={cropSrc}
+          aspect={cropAspect}
+          rounded={isCircle}
+          onConfirm={handleCropConfirm}
+          onCancel={closeCropper}
+        />
+      )}
     </div>
   );
 }
