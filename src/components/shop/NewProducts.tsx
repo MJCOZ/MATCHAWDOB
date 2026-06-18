@@ -5,6 +5,7 @@ interface Product {
   id: string; nameAr: string; slug: string;
   price: number; salePrice?: number | null; mainImage?: string | null;
   stock: number; isFeatured: boolean; isNew: boolean;
+  rating?: number; reviewCount?: number;
   category: { nameAr: string; slug: string };
 }
 

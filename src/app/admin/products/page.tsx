@@ -14,7 +14,7 @@ interface SearchParams {
 }
 
 export default async function AdminProductsPage({ searchParams }: { searchParams: SearchParams }) {
-  const page = parseInt(searchParams.page || "1");
+  const page = Math.max(1, parseInt(searchParams.page || "1") || 1);
   const limit = 15;
 
   const where: any = {};

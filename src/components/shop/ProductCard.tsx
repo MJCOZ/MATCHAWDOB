@@ -17,11 +17,13 @@ interface ProductCardProps {
   isFeatured?: boolean;
   isNew?: boolean;
   categoryName?: string;
+  rating?: number;
+  reviewCount?: number;
 }
 
 export function ProductCard({
   id, nameAr, slug, price, salePrice, mainImage,
-  stock, isFeatured, isNew, categoryName
+  stock, isFeatured, isNew, categoryName, rating, reviewCount
 }: ProductCardProps) {
   const { addItem, openCart } = useCartStore();
   const displayPrice      = salePrice ?? price;
@@ -74,7 +76,7 @@ export function ProductCard({
         </div>
 
         {/* زر المفضلة */}
-        <button onClick={e => e.preventDefault()}
+        <button onClick={e => e.preventDefault()} aria-label="إضافة للمفضلة"
           className="absolute top-3 left-3 w-9 h-9 bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
           style={{ border: "2px solid #1a1a1a", boxShadow: "2px 2px 0 #1a1a1a", borderRadius: "4px" }}>
           <Heart size={15} className="text-gray-400 hover:text-red-500 transition-colors" />
@@ -109,12 +111,14 @@ export function ProductCard({
         </h3>
 
         {/* التقييم */}
-        <div className="flex items-center gap-1 mb-3">
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} size={11} className={i < 4 ? "fill-[#B2DE81] text-[#B2DE81]" : "text-gray-300"} />
-          ))}
-          <span className="text-xs text-gray-400 mr-1">(24)</span>
-        </div>
+        {!!reviewCount && (
+          <div className="flex items-center gap-1 mb-3">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} size={11} className={i < Math.round(rating || 0) ? "fill-[#B2DE81] text-[#B2DE81]" : "text-gray-300"} />
+            ))}
+            <span className="text-xs text-gray-400 mr-1">({reviewCount})</span>
+          </div>
+        )}
 
         {/* السعر */}
         <div className="flex items-center justify-between">

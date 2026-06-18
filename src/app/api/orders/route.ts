@@ -285,7 +285,7 @@ export async function GET(req: Request) {
 
     const userId = (session.user as any).id;
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get("page") || "1");
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1") || 1);
     const limit = 10;
 
     const [orders, total] = await Promise.all([

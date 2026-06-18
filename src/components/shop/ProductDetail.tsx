@@ -77,7 +77,7 @@ export function ProductDetail({ product, related }: ProductDetailProps) {
                     activeImage === i ? "border-orange-400" : "border-transparent"
                   }`}
                 >
-                  <Image src={img} alt="" width={80} height={80} className="object-cover w-full h-full" />
+                  <Image src={img} alt={`${product.nameAr} - صورة ${i + 1}`} width={80} height={80} className="object-cover w-full h-full" />
                 </button>
               ))}
             </div>
@@ -91,7 +91,7 @@ export function ProductDetail({ product, related }: ProductDetailProps) {
               <p className="text-sm text-orange-500 font-medium mb-1">{product.category.nameAr}</p>
               <h1 className="text-2xl md:text-3xl font-black text-gray-900 leading-tight">{product.nameAr}</h1>
             </div>
-            <button className="p-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 flex-shrink-0">
+            <button aria-label="مشاركة المنتج" className="p-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 flex-shrink-0">
               <Share2 size={18} className="text-gray-500" />
             </button>
           </div>
