@@ -21,20 +21,31 @@ export function BrandLogo({ size = "md", variant = "color", showText = true }: B
   const [brand, setBrand] = useState<BrandData>(brandCache || {});
 
   useEffect(() => {
-    if (brandCache) return;
-    fetch("/api/store-settings")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (d) {
-          brandCache = {
-            store_logo: d.store_logo,
-            store_tagline: d.store_tagline,
-            store_name: d.store_name,
-          };
-          setBrand(brandCache);
-        }
-      })
-      .catch(() => {});
+    function fetchBrand() {
+      fetch("/api/store-settings")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (d) {
+            brandCache = {
+              store_logo: d.store_logo,
+              store_tagline: d.store_tagline,
+              store_name: d.store_name,
+            };
+            setBrand(brandCache);
+          }
+        })
+        .catch(() => {});
+    }
+
+    if (!brandCache) fetchBrand();
+
+    // إعادة الجلب فور حفظ إعدادات الهوية من لوحة التحكم لتفادي ظهور بيانات قديمة من الذاكرة المؤقتة
+    function onBrandUpdated() {
+      brandCache = null;
+      fetchBrand();
+    }
+    window.addEventListener("brand-updated", onBrandUpdated);
+    return () => window.removeEventListener("brand-updated", onBrandUpdated);
   }, []);
 
   const sizes = {

@@ -53,6 +53,7 @@ export default function AdminSettingsPage() {
         body: JSON.stringify(values),
       });
       if (!res.ok) throw new Error();
+      window.dispatchEvent(new Event("brand-updated"));
       toast.success("تم حفظ الإعدادات");
     } catch {
       toast.error("حدث خطأ");
