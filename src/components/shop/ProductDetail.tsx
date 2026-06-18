@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ShoppingCart, Plus, Minus, Star, Share2, Shield, Truck, RefreshCw, Package } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
-import { formatPrice, calculateDiscountPercent } from "@/lib/utils";
+import { formatPrice, calculateDiscountPercent, getEffectivePrice } from "@/lib/utils";
 import { ProductCard } from "./ProductCard";
 import toast from "react-hot-toast";
 
@@ -30,7 +30,9 @@ export function ProductDetail({ product, related }: ProductDetailProps) {
     ? [product.mainImage, ...product.images.filter((i) => i !== product.mainImage)]
     : product.images;
 
-  const discountPercent = calculateDiscountPercent(product.price, product.salePrice ?? product.price);
+  const effectivePrice = getEffectivePrice(product.price, product.salePrice);
+  const hasSale = effectivePrice < product.price;
+  const discountPercent = calculateDiscountPercent(product.price, effectivePrice);
   const avgRating = product.reviews.length > 0
     ? product.reviews.reduce((s, r) => s + r.rating, 0) / product.reviews.length
     : 0;
@@ -112,15 +114,15 @@ export function ProductDetail({ product, related }: ProductDetailProps) {
           <div className="bg-orange-50 rounded-2xl p-5 mb-6">
             <div className="flex items-baseline gap-3">
               <span className="text-4xl font-black text-orange-500">
-                {formatPrice(product.salePrice ?? product.price)}
+                {formatPrice(effectivePrice)}
               </span>
-              {product.salePrice && (
+              {hasSale && (
                 <span className="text-xl text-gray-400 line-through">{formatPrice(product.price)}</span>
               )}
             </div>
             {discountPercent > 0 && (
               <p className="text-sm text-green-600 font-semibold mt-1">
-                💰 توفر {formatPrice(product.price - (product.salePrice || 0))} ({discountPercent}% خصم)
+                💰 توفر {formatPrice(product.price - effectivePrice)} ({discountPercent}% خصم)
               </p>
             )}
             <p className="text-xs text-gray-500 mt-1">السعر شامل ضريبة القيمة المضافة 15%</p>

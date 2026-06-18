@@ -37,7 +37,7 @@ export default async function HomePage() {
       },
     }),
     prisma.product.findMany({
-      where: { isActive: true, salePrice: { not: null }, stock: { gt: 0 } },
+      where: { isActive: true, salePrice: { gt: 0 }, stock: { gt: 0 } },
       orderBy: { createdAt: "desc" },
       take: 4,
       include: { category: { select: { nameAr: true, slug: true } } },

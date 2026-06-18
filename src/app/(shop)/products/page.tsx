@@ -43,7 +43,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
     ];
   }
 
-  if (searchParams.sale === "true") where.salePrice = { not: null };
+  if (searchParams.sale === "true") where.salePrice = { gt: 0 };
   if (searchParams.new === "true") where.isNew = true;
   if (searchParams.featured === "true") where.isFeatured = true;
   if (searchParams.minPrice) where.price = { ...(where.price || {}), gte: parseFloat(searchParams.minPrice) };

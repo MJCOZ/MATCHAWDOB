@@ -3,6 +3,7 @@
 // ================================================
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { getEffectivePrice } from "@/lib/utils";
 
 export interface CartProduct {
   id: string;
@@ -107,7 +108,7 @@ export const useCartStore = create<CartState>()(
 
       getSubtotal: () => {
         return get().items.reduce((total, item) => {
-          const price = item.product.salePrice ?? item.product.price;
+          const price = getEffectivePrice(item.product.price, item.product.salePrice);
           return total + price * item.quantity;
         }, 0);
       },

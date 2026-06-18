@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart, Heart, Star } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
-import { formatPrice, calculateDiscountPercent } from "@/lib/utils";
+import { formatPrice, calculateDiscountPercent, getEffectivePrice } from "@/lib/utils";
 import toast from "react-hot-toast";
 
 interface ProductCardProps {
@@ -26,8 +26,9 @@ export function ProductCard({
   stock, isFeatured, isNew, categoryName, rating, reviewCount
 }: ProductCardProps) {
   const { addItem, openCart } = useCartStore();
-  const displayPrice      = salePrice ?? price;
-  const discountPercent   = calculateDiscountPercent(price, salePrice ?? price);
+  const displayPrice      = getEffectivePrice(price, salePrice);
+  const hasSale           = displayPrice < price;
+  const discountPercent   = calculateDiscountPercent(price, displayPrice);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -124,7 +125,7 @@ export function ProductCard({
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className="text-lg font-black text-[#261B6D] font-en">{formatPrice(displayPrice)}</span>
-            {salePrice && (
+            {hasSale && (
               <span className="text-sm text-gray-400 line-through font-en">{formatPrice(price)}</span>
             )}
           </div>

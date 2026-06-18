@@ -38,8 +38,13 @@ export function slugify(text: string): string {
 
 // حساب نسبة الخصم
 export function calculateDiscountPercent(original: number, sale: number): number {
-  if (!original || original <= sale) return 0;
+  if (!original || !sale || sale <= 0 || original <= sale) return 0;
   return Math.round(((original - sale) / original) * 100);
+}
+
+// السعر الفعلي للمنتج — يتجاهل سعر الخصم إن كان غير صالح (صفر أو أكبر من السعر الأصلي)
+export function getEffectivePrice(price: number, salePrice?: number | null): number {
+  return salePrice && salePrice > 0 && salePrice < price ? salePrice : price;
 }
 
 // تنسيق التاريخ بالعربية

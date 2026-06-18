@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useCartStore } from "@/store/cartStore";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, getEffectivePrice } from "@/lib/utils";
 import { AddressStep } from "./AddressStep";
 import { ShippingStep } from "./ShippingStep";
 import { PaymentStep } from "./PaymentStep";
@@ -68,7 +68,7 @@ export function CheckoutForm({ addresses, userId }: CheckoutFormProps) {
           items: items.map((item) => ({
             productId: item.product.id,
             quantity: item.quantity,
-            price: item.product.salePrice ?? item.product.price,
+            price: getEffectivePrice(item.product.price, item.product.salePrice),
           })),
           couponCode: coupon?.code,
           subtotal,

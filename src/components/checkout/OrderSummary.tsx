@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useCartStore } from "@/store/cartStore";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, getEffectivePrice } from "@/lib/utils";
 import { useState } from "react";
 import { Tag, X, Check } from "lucide-react";
 import toast from "react-hot-toast";
@@ -63,7 +63,7 @@ export function OrderSummary({ items, subtotal, discount, shipping, tax, total, 
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-gray-900 truncate">{product.nameAr}</p>
               <p className="text-xs text-orange-500 font-bold mt-0.5">
-                {formatPrice((product.salePrice ?? product.price) * quantity)}
+                {formatPrice(getEffectivePrice(product.price, product.salePrice) * quantity)}
               </p>
             </div>
           </div>

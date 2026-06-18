@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductDetail } from "@/components/shop/ProductDetail";
+import { getEffectivePrice } from "@/lib/utils";
 import type { Metadata } from "next";
 
 interface Props {
@@ -87,7 +88,7 @@ export default async function ProductPage({ params }: Props) {
     offers: {
       "@type": "Offer",
       priceCurrency: "SAR",
-      price: Number(product.salePrice ?? product.price),
+      price: getEffectivePrice(Number(product.price), product.salePrice ? Number(product.salePrice) : null),
       availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
     },
   };
