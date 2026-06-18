@@ -3,7 +3,7 @@ import { X, ShoppingCart, Trash2, Plus, Minus, ArrowLeft, Sparkles } from "lucid
 import Link from "next/link";
 import Image from "next/image";
 import { useCartStore } from "@/store/cartStore";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, getEffectivePrice } from "@/lib/utils";
 
 export function CartDrawer() {
   const {
@@ -65,7 +65,7 @@ export function CartDrawer() {
             {/* قائمة المنتجات */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {items.map(({ product, quantity }) => {
-                const price = product.salePrice ?? product.price;
+                const price = getEffectivePrice(product.price, product.salePrice);
                 return (
                   <div key={product.id} className="flex items-center gap-3 bg-[#F8F7FF] border border-[#e8e6f5] rounded-2xl p-3">
                     {/* صورة المنتج */}

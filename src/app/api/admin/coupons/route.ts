@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { couponSchema } from "@/lib/validations";
 
 async function checkAdmin() {
   const session = await getServerSession(authOptions);
@@ -21,11 +22,11 @@ export async function POST(req: Request) {
   if (!await checkAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { code, descriptionAr, type, value, minOrderAmount, usageLimit, expiresAt } = body;
-
-  if (!code || !descriptionAr || !type || value === undefined) {
-    return NextResponse.json({ error: "بيانات ناقصة" }, { status: 400 });
+  const validation = couponSchema.safeParse(body);
+  if (!validation.success) {
+    return NextResponse.json({ error: validation.error.errors[0].message }, { status: 400 });
   }
+  const { code, descriptionAr, type, value, minOrderAmount, usageLimit, expiresAt } = validation.data;
 
   const existing = await prisma.coupon.findUnique({ where: { code } });
   if (existing) return NextResponse.json({ error: "الكود موجود مسبقاً" }, { status: 400 });

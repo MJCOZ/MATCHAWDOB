@@ -22,16 +22,22 @@ export default async function HomePage() {
       where: { isActive: true, isFeatured: true, stock: { gt: 0 } },
       orderBy: { createdAt: "desc" },
       take: 8,
-      include: { category: { select: { nameAr: true, slug: true } } },
+      include: {
+        category: { select: { nameAr: true, slug: true } },
+        reviews: { where: { isApproved: true }, select: { rating: true } },
+      },
     }),
     prisma.product.findMany({
       where: { isActive: true, isNew: true, stock: { gt: 0 } },
       orderBy: { createdAt: "desc" },
       take: 8,
-      include: { category: { select: { nameAr: true, slug: true } } },
+      include: {
+        category: { select: { nameAr: true, slug: true } },
+        reviews: { where: { isApproved: true }, select: { rating: true } },
+      },
     }),
     prisma.product.findMany({
-      where: { isActive: true, salePrice: { not: null }, stock: { gt: 0 } },
+      where: { isActive: true, salePrice: { gt: 0 }, stock: { gt: 0 } },
       orderBy: { createdAt: "desc" },
       take: 4,
       include: { category: { select: { nameAr: true, slug: true } } },
@@ -39,11 +45,13 @@ export default async function HomePage() {
   ]);
 
   const serialize = (products: any[]) =>
-    products.map((p) => ({
+    products.map(({ reviews, ...p }) => ({
       ...p,
       price: Number(p.price),
       salePrice: p.salePrice ? Number(p.salePrice) : null,
       images: Array.isArray(p.images) ? p.images : JSON.parse(p.images as string || "[]"),
+      reviewCount: reviews?.length ?? 0,
+      rating: reviews?.length ? reviews.reduce((s: number, r: any) => s + r.rating, 0) / reviews.length : 0,
     }));
 
   return (

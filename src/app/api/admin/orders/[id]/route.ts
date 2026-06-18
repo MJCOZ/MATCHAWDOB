@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { z } from "zod";
+import { updateOrderStatusSchema } from "@/lib/validations";
+
+const patchOrderSchema = updateOrderStatusSchema.extend({ carrier: z.string().optional() });
 
 async function checkAdmin() {
   const session = await getServerSession(authOptions);
@@ -15,7 +19,12 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (!(await checkAdmin())) return NextResponse.json({ error: "غير مصرح" }, { status: 403 });
 
   try {
-    const { status, trackingNumber, carrier } = await req.json();
+    const body = await req.json();
+    const validation = patchOrderSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json({ error: validation.error.errors[0].message }, { status: 400 });
+    }
+    const { status, trackingNumber, carrier } = validation.data;
 
     const order = await prisma.order.update({
       where: { id: params.id },

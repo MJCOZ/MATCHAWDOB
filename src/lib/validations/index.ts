@@ -35,7 +35,11 @@ export const productSchema = z.object({
   isFeatured: z.boolean().optional(),
   isActive: z.boolean().optional(),
   isNew: z.boolean().optional(),
-});
+}).transform((data) => ({
+  ...data,
+  // سعر الخصم غير صالح كخصم إن كان صفراً أو أكبر من (أو يساوي) السعر الأصلي — يُعامل كحقل فارغ
+  salePrice: data.salePrice && data.salePrice > 0 && data.salePrice < data.price ? data.salePrice : null,
+}));
 
 // التصنيف
 export const categorySchema = z.object({

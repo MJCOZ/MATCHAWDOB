@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProductsPage({ searchParams }: { searchParams: SearchParams }) {
-  const page = parseInt(searchParams.page || "1");
+  const page = Math.max(1, parseInt(searchParams.page || "1") || 1);
   const limit = 12;
   const skip = (page - 1) * limit;
 
@@ -43,7 +43,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
     ];
   }
 
-  if (searchParams.sale === "true") where.salePrice = { not: null };
+  if (searchParams.sale === "true") where.salePrice = { gt: 0 };
   if (searchParams.new === "true") where.isNew = true;
   if (searchParams.featured === "true") where.isFeatured = true;
   if (searchParams.minPrice) where.price = { ...(where.price || {}), gte: parseFloat(searchParams.minPrice) };
@@ -61,7 +61,10 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
       orderBy,
       skip,
       take: limit,
-      include: { category: { select: { nameAr: true, slug: true } } },
+      include: {
+        category: { select: { nameAr: true, slug: true } },
+        reviews: { where: { isApproved: true }, select: { rating: true } },
+      },
     }),
     prisma.product.count({ where }),
     prisma.category.findMany({
@@ -70,11 +73,13 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
     }),
   ]);
 
-  const serializedProducts = products.map((p) => ({
+  const serializedProducts = products.map(({ reviews, ...p }) => ({
     ...p,
     price: Number(p.price),
     salePrice: p.salePrice ? Number(p.salePrice) : null,
     images: Array.isArray(p.images) ? p.images : [],
+    reviewCount: reviews.length,
+    rating: reviews.length ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0,
   }));
 
   const totalPages = Math.ceil(total / limit);

@@ -18,7 +18,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const safe = Object.fromEntries(Object.entries(body).filter(([k]) => allowed.includes(k)));
     const coupon = await prisma.coupon.update({ where: { id: params.id }, data: safe });
     return NextResponse.json(coupon);
-  } catch {
+  } catch (error) {
+    console.error("Coupon update error:", error);
     return NextResponse.json({ error: "فشل التحديث" }, { status: 500 });
   }
 }
@@ -28,7 +29,8 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   try {
     await prisma.coupon.delete({ where: { id: params.id } });
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (error) {
+    console.error("Coupon delete error:", error);
     return NextResponse.json({ error: "فشل الحذف" }, { status: 500 });
   }
 }

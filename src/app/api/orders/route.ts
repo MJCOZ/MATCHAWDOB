@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { generateOrderNumber } from "@/lib/utils";
+import { generateOrderNumber, getEffectivePrice } from "@/lib/utils";
 import { createMoyasarPayment } from "@/lib/payments/moyasar";
 import { createTapCharge } from "@/lib/payments/tap";
 
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       if (product.stock < quantity) {
         return NextResponse.json({ error: `المخزون غير كافٍ لـ ${product.nameAr}` }, { status: 400 });
       }
-      const price = Number(product.salePrice ?? product.price);
+      const price = getEffectivePrice(Number(product.price), product.salePrice != null ? Number(product.salePrice) : null);
       subtotal += price * quantity;
       resolvedItems.push({ productId: product.id, quantity, price });
     }
@@ -285,7 +285,7 @@ export async function GET(req: Request) {
 
     const userId = (session.user as any).id;
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get("page") || "1");
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1") || 1);
     const limit = 10;
 
     const [orders, total] = await Promise.all([

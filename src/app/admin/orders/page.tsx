@@ -21,7 +21,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default async function AdminOrdersPage({ searchParams }: { searchParams: SearchParams }) {
-  const page = parseInt(searchParams.page || "1");
+  const page = Math.max(1, parseInt(searchParams.page || "1") || 1);
   const limit = 20;
   const where: any = {};
 

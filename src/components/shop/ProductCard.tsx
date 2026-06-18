@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart, Heart, Star } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
-import { formatPrice, calculateDiscountPercent } from "@/lib/utils";
+import { formatPrice, calculateDiscountPercent, getEffectivePrice } from "@/lib/utils";
 import toast from "react-hot-toast";
 
 interface ProductCardProps {
@@ -17,15 +17,18 @@ interface ProductCardProps {
   isFeatured?: boolean;
   isNew?: boolean;
   categoryName?: string;
+  rating?: number;
+  reviewCount?: number;
 }
 
 export function ProductCard({
   id, nameAr, slug, price, salePrice, mainImage,
-  stock, isFeatured, isNew, categoryName
+  stock, isFeatured, isNew, categoryName, rating, reviewCount
 }: ProductCardProps) {
   const { addItem, openCart } = useCartStore();
-  const displayPrice      = salePrice ?? price;
-  const discountPercent   = calculateDiscountPercent(price, salePrice ?? price);
+  const displayPrice      = getEffectivePrice(price, salePrice);
+  const hasSale           = displayPrice < price;
+  const discountPercent   = calculateDiscountPercent(price, displayPrice);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -74,7 +77,7 @@ export function ProductCard({
         </div>
 
         {/* زر المفضلة */}
-        <button onClick={e => e.preventDefault()}
+        <button onClick={e => e.preventDefault()} aria-label="إضافة للمفضلة"
           className="absolute top-3 left-3 w-9 h-9 bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
           style={{ border: "2px solid #1a1a1a", boxShadow: "2px 2px 0 #1a1a1a", borderRadius: "4px" }}>
           <Heart size={15} className="text-gray-400 hover:text-red-500 transition-colors" />
@@ -109,18 +112,20 @@ export function ProductCard({
         </h3>
 
         {/* التقييم */}
-        <div className="flex items-center gap-1 mb-3">
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} size={11} className={i < 4 ? "fill-[#B2DE81] text-[#B2DE81]" : "text-gray-300"} />
-          ))}
-          <span className="text-xs text-gray-400 mr-1">(24)</span>
-        </div>
+        {!!reviewCount && (
+          <div className="flex items-center gap-1 mb-3">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} size={11} className={i < Math.round(rating || 0) ? "fill-[#B2DE81] text-[#B2DE81]" : "text-gray-300"} />
+            ))}
+            <span className="text-xs text-gray-400 mr-1">({reviewCount})</span>
+          </div>
+        )}
 
         {/* السعر */}
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className="text-lg font-black text-[#261B6D] font-en">{formatPrice(displayPrice)}</span>
-            {salePrice && (
+            {hasSale && (
               <span className="text-sm text-gray-400 line-through font-en">{formatPrice(price)}</span>
             )}
           </div>

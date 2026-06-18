@@ -146,8 +146,9 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
             {errors.price && <p className="text-red-500 text-xs mt-1">{errors.price.message}</p>}
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700 block mb-1.5">سعر الخصم</label>
-            <input type="number" step="0.01" {...register("salePrice", { valueAsNumber: true, setValueAs: (v) => v === "" ? null : Number(v) })} className="input-field" placeholder="0.00" />
+            <label className="text-sm font-medium text-gray-700 block mb-1.5">سعر الخصم (اختياري)</label>
+            <input type="number" step="0.01" {...register("salePrice", { setValueAs: (v) => v === "" ? null : Number(v) })} className="input-field" placeholder="اتركه فارغاً إن لم يوجد خصم" />
+            <p className="text-xs text-gray-400 mt-1">اتركه فارغاً إن لم يوجد خصم — لا تكتب 0.</p>
           </div>
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-1.5">المخزون *</label>
@@ -155,8 +156,8 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
             {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock.message}</p>}
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700 block mb-1.5">الوزن (كجم)</label>
-            <input type="number" step="0.001" {...register("weight", { valueAsNumber: true, setValueAs: (v) => v === "" ? null : Number(v) })} className="input-field" placeholder="0.000" />
+            <label className="text-sm font-medium text-gray-700 block mb-1.5">الوزن (كجم) (اختياري)</label>
+            <input type="number" step="0.001" {...register("weight", { setValueAs: (v) => v === "" ? null : Number(v) })} className="input-field" placeholder="اتركه فارغاً إن لم تحتاجه" />
           </div>
         </div>
       </div>
