@@ -64,8 +64,8 @@ export function OffersSection({ products }: { products: Product[] }) {
                   </p>
                   <h3 className="text-sm font-bold text-[#261B6D] line-clamp-1 mb-2">{product.nameAr}</h3>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-base font-black text-[#261B6D] font-en">{formatPrice(product.salePrice)}</span>
-                    <span className="text-xs text-gray-400 line-through font-en">{formatPrice(product.price)}</span>
+                    <span className="text-base font-black text-[#261B6D]">{formatPrice(product.salePrice)}</span>
+                    <span className="text-xs text-gray-400 line-through">{formatPrice(product.price)}</span>
                   </div>
                 </div>
               </Link>
