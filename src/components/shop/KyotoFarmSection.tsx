@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-const FIELD_IMAGE = "https://images.unsplash.com/photo-1764092184365-0c4c62b55d97?q=80&w=1600&auto=format&fit=crop";
-const VILLAGE_IMAGE = "https://images.unsplash.com/photo-1760884966322-207bd5afdd77?q=80&w=600&auto=format&fit=crop";
+const FIELD_IMAGE = "/images/kyoto/field.jpg";
+const VILLAGE_IMAGE = "/images/kyoto/village.jpg";
 
 const steps = [
   { kanji: "陰", title: "تظليل تقليدي", desc: "قبل الحصاد بأسابيع" },
