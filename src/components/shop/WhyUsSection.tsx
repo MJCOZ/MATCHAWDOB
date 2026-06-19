@@ -41,11 +41,11 @@ const features = [
 
 export function WhyUsSection() {
   return (
-    <section className="py-16 ink-dots-bg" style={{ borderTop: "2px solid #1a1a1a", borderBottom: "2px solid #1a1a1a" }}>
+    <section className="py-10 md:py-16 ink-dots-bg" style={{ borderTop: "2px solid #1a1a1a", borderBottom: "2px solid #1a1a1a" }}>
       <div className="container-custom">
 
         {/* العنوان */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8 md:mb-12">
           <span className="section-tag mb-4 inline-flex mx-auto">
             <span className="font-en">✦ WHY MATCHAWDOB</span>
           </span>

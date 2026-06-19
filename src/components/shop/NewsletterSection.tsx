@@ -15,7 +15,7 @@ export function NewsletterSection() {
   };
 
   return (
-    <section className="py-16 relative overflow-hidden"
+    <section className="py-10 md:py-16 relative overflow-hidden"
       style={{ background: "#1a1250", borderTop: "3px solid #1a1a1a" }}>
 
       {/* زخارف خلفية */}

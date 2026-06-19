@@ -11,9 +11,9 @@ interface Product {
 
 export function FeaturedProducts({ products }: { products: Product[] }) {
   return (
-    <section className="container-custom py-14">
+    <section className="container-custom py-10 md:py-14">
 
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-start justify-between mb-8">
         <div>
           <span className="section-tag mb-3 inline-flex">
             <span className="font-en">✦ FEATURED</span>

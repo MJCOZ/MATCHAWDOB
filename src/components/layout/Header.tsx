@@ -10,14 +10,10 @@ import { useCartStore } from "@/store/cartStore";
 import { CartDrawer } from "@/components/shop/CartDrawer";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 
-const categories = [
-  { nameAr: "كل المنتجات", slug: "" },
-  { nameAr: "ماتشا بودر",  slug: "matcha-powder" },
-  { nameAr: "أدوات الماتشا", slug: "matcha-tools" },
-  { nameAr: "مشروبات",    slug: "drinks" },
-  { nameAr: "إكسسوارات",  slug: "accessories" },
-  { nameAr: "هدايا",      slug: "gifts" },
-];
+interface NavCategory {
+  nameAr: string;
+  slug: string;
+}
 
 /* شريط الإعلانات المتحرك */
 function AnnouncementBar() {
@@ -42,13 +38,16 @@ function AnnouncementBar() {
   );
 }
 
-export function Header() {
+export function Header({ categories = [] }: { categories?: NavCategory[] }) {
   const { data: session } = useSession();
   const { getItemCount, openCart } = useCartStore();
   const [isMenuOpen, setIsMenuOpen]     = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery]   = useState("");
   const itemCount = getItemCount();
+
+  // "كل المنتجات" ثابت دائماً في المقدمة، ثم التصنيفات القادمة من قاعدة البيانات
+  const navCategories: NavCategory[] = [{ nameAr: "كل المنتجات", slug: "" }, ...categories];
 
   const isAdmin = (session?.user as any)?.role === "ADMIN" ||
                   (session?.user as any)?.role === "SUPER_ADMIN";
@@ -187,8 +186,8 @@ export function Header() {
         <nav className="hidden md:block" style={{ borderTop: "2px solid #1a1a1a", background: "#FAFAF5" }}>
           <div className="container-custom">
             <ul className="flex items-center gap-0 py-0 overflow-x-auto scrollbar-hide">
-              {categories.map((cat, idx) => (
-                <li key={cat.slug} style={{ borderLeft: idx > 0 ? "1px solid #e5e7eb" : "none" }}>
+              {navCategories.map((cat, idx) => (
+                <li key={cat.slug || "all"} style={{ borderLeft: idx > 0 ? "1px solid #e5e7eb" : "none" }}>
                   <Link
                     href={cat.slug ? `/products?category=${cat.slug}` : "/products"}
                     className="block px-5 py-2.5 text-sm font-bold text-gray-700 hover:text-[#261B6D] hover:bg-[#B2DE81]/20 transition-colors whitespace-nowrap"
@@ -213,8 +212,8 @@ export function Header() {
           <div className="md:hidden" style={{ borderTop: "2px solid #1a1a1a", background: "white" }}>
             <nav className="container-custom py-4">
               <ul className="space-y-1">
-                {categories.map(cat => (
-                  <li key={cat.slug}>
+                {navCategories.map(cat => (
+                  <li key={cat.slug || "all"}>
                     <Link href={cat.slug ? `/products?category=${cat.slug}` : "/products"}
                       className="block px-4 py-3 text-sm font-bold text-[#261B6D] hover:bg-[#B2DE81]/20 transition-colors"
                       style={{ borderRadius: "4px" }}

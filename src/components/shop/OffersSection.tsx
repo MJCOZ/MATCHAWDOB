@@ -11,7 +11,7 @@ interface Product {
 export function OffersSection({ products }: { products: Product[] }) {
   return (
     <section style={{ background: "#261B6D", borderTop: "3px solid #1a1a1a", borderBottom: "3px solid #1a1a1a" }}
-      className="py-14 relative overflow-hidden">
+      className="py-10 md:py-14 relative overflow-hidden">
 
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
         {[
@@ -27,7 +27,7 @@ export function OffersSection({ products }: { products: Product[] }) {
       </div>
 
       <div className="container-custom relative z-10">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-start justify-between mb-8">
           <div>
             <span className="inline-flex items-center gap-1.5 text-xs font-black tracking-wider uppercase mb-3 font-en"
               style={{ background: "#B2DE81", color: "#261B6D", padding: "4px 12px", border: "2px solid #1a1a1a", boxShadow: "2px 2px 0 #1a1a1a", borderRadius: "2px" }}>
