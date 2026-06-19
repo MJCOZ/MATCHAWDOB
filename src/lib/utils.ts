@@ -11,6 +11,7 @@ export function formatPrice(price: number | string): string {
   return new Intl.NumberFormat("ar-SA", {
     style: "currency",
     currency: "SAR",
+    numberingSystem: "latn",
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(num);
