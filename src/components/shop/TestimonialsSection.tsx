@@ -35,10 +35,10 @@ const reviews = [
 
 export function TestimonialsSection() {
   return (
-    <section className="container-custom py-16">
+    <section className="container-custom py-10 md:py-16">
 
       {/* العنوان */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-8 md:mb-12">
         <span className="section-tag mb-4 inline-flex mx-auto">
           <span className="font-en">✦ REVIEWS</span>
         </span>
@@ -106,7 +106,7 @@ export function TestimonialsSection() {
       </div>
 
       {/* إجمالي التقييمات */}
-      <div className="mt-10 text-center">
+      <div className="mt-6 md:mt-10 text-center">
         <div className="inline-flex items-center gap-6 px-8 py-5"
           style={{ border: "2px solid #1a1a1a", boxShadow: "4px 4px 0 #B2DE81", borderRadius: "4px", background: "white" }}>
           {[
