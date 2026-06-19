@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 import { prisma } from "@/lib/prisma";
 import { HeroBanner } from "@/components/shop/HeroBanner";
 import { CategoriesSection } from "@/components/shop/CategoriesSection";
+import { KyotoFarmSection } from "@/components/shop/KyotoFarmSection";
 import { FeaturedProducts } from "@/components/shop/FeaturedProducts";
 import { OffersSection } from "@/components/shop/OffersSection";
 import { NewProducts } from "@/components/shop/NewProducts";
@@ -64,6 +65,9 @@ export default async function HomePage() {
 
       {/* التصنيفات */}
       <CategoriesSection categories={categories as any} />
+
+      {/* قصة المنشأ - مزارع كيوتو */}
+      <KyotoFarmSection />
 
       {/* المنتجات المميزة */}
       {featuredProducts.length > 0 && (
