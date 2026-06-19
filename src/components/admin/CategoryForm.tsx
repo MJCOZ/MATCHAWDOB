@@ -1,31 +1,59 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { slugify } from "@/lib/utils";
 import toast from "react-hot-toast";
 
-export function CategoryForm() {
+interface CategoryFormData {
+  id: string;
+  nameAr: string;
+  nameEn: string | null;
+  description: string | null;
+  isActive: boolean;
+  sortOrder: number;
+}
+
+const emptyForm = { nameAr: "", nameEn: "", description: "", isActive: true, sortOrder: 0 };
+
+export function CategoryForm({ editingCategory, onDoneEditing }: { editingCategory?: CategoryFormData | null; onDoneEditing?: () => void }) {
   const router = useRouter();
+  const isEdit = !!editingCategory;
   const [isLoading, setIsLoading] = useState(false);
-  const [form, setForm] = useState({
-    nameAr: "", nameEn: "", description: "", isActive: true, sortOrder: 0,
-  });
+  const [form, setForm] = useState(emptyForm);
+
+  useEffect(() => {
+    if (editingCategory) {
+      setForm({
+        nameAr: editingCategory.nameAr,
+        nameEn: editingCategory.nameEn || "",
+        description: editingCategory.description || "",
+        isActive: editingCategory.isActive,
+        sortOrder: editingCategory.sortOrder,
+      });
+    } else {
+      setForm(emptyForm);
+    }
+  }, [editingCategory]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.nameAr.trim()) return;
     setIsLoading(true);
     try {
-      const res = await fetch("/api/admin/categories", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, slug: slugify(form.nameAr) }),
-      });
+      const res = await fetch(
+        isEdit ? `/api/admin/categories/${editingCategory!.id}` : "/api/admin/categories",
+        {
+          method: isEdit ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...form, slug: slugify(form.nameAr) }),
+        }
+      );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "حدث خطأ");
-      toast.success("تم إضافة التصنيف");
-      setForm({ nameAr: "", nameEn: "", description: "", isActive: true, sortOrder: 0 });
+      toast.success(isEdit ? "تم تحديث التصنيف" : "تم إضافة التصنيف");
+      setForm(emptyForm);
+      onDoneEditing?.();
       router.refresh();
     } catch (err: any) {
       toast.error(err.message);
@@ -58,9 +86,16 @@ export function CategoryForm() {
           <span className="text-sm text-gray-700">نشط</span>
         </label>
       </div>
-      <button type="submit" disabled={isLoading || !form.nameAr} className="btn-primary w-full py-3 flex items-center justify-center gap-2 disabled:opacity-50">
-        {isLoading ? <><Loader2 size={16} className="animate-spin" />جاري الحفظ...</> : "إضافة التصنيف"}
-      </button>
+      <div className="flex gap-3">
+        <button type="submit" disabled={isLoading || !form.nameAr} className="btn-primary flex-1 py-3 flex items-center justify-center gap-2 disabled:opacity-50">
+          {isLoading ? <><Loader2 size={16} className="animate-spin" />جاري الحفظ...</> : isEdit ? "حفظ التغييرات" : "إضافة التصنيف"}
+        </button>
+        {isEdit && (
+          <button type="button" onClick={onDoneEditing} className="btn-outline py-3 px-6">
+            إلغاء
+          </button>
+        )}
+      </div>
     </form>
   );
 }
