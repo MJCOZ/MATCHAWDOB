@@ -124,9 +124,9 @@ export function ProductCard({
         {/* السعر */}
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-2">
-            <span className="text-lg font-black text-[#261B6D] font-en">{formatPrice(displayPrice)}</span>
+            <span className="text-lg font-black text-[#261B6D]">{formatPrice(displayPrice)}</span>
             {hasSale && (
-              <span className="text-sm text-gray-400 line-through font-en">{formatPrice(price)}</span>
+              <span className="text-sm text-gray-400 line-through">{formatPrice(price)}</span>
             )}
           </div>
           {stock > 0 && stock <= 5 && (
