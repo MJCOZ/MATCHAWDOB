@@ -22,6 +22,7 @@ interface CustomizerData {
   bgColor: string;
   slogan: string;
   stats: [Stat, Stat, Stat];
+  reviewStats: [Stat, Stat, Stat];
   storeName: string;
   storePhone: string;
   storeEmail: string;
@@ -48,6 +49,11 @@ const DEFAULT: CustomizerData = {
     { num: "+500", label: "عميل سعيد" },
     { num: "100%", label: "ماتشا أصيل" },
     { num: "24h",  label: "توصيل سريع" },
+  ],
+  reviewStats: [
+    { num: "+500", label: "عميل سعيد" },
+    { num: "98%", label: "تقييم إيجابي" },
+    { num: "+1200", label: "طلب مكتمل" },
   ],
   storeName: "MatchaWdob",
   storePhone: "+966500000000",
@@ -220,6 +226,14 @@ export default function CustomizerPage() {
       const stats = [...prev.stats] as [Stat, Stat, Stat];
       stats[index] = stat;
       return { ...prev, stats };
+    });
+  }, []);
+
+  const updateReviewStat = useCallback((index: number, stat: Stat) => {
+    setData(prev => {
+      const reviewStats = [...prev.reviewStats] as [Stat, Stat, Stat];
+      reviewStats[index] = stat;
+      return { ...prev, reviewStats };
     });
   }, []);
 
@@ -554,6 +568,35 @@ export default function CustomizerPage() {
                         <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.6)" }}>{stat.label}</p>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                {/* إحصائيات قسم التقييمات */}
+                <div className="pt-4 border-t border-gray-100">
+                  <p className="text-xs text-gray-400 mb-3">الأرقام التي تظهر أسفل قسم آراء العملاء</p>
+                  <div className="space-y-3">
+                    {data.reviewStats.map((stat, i) => (
+                      <div key={i} className="p-4 bg-gray-50 rounded-2xl space-y-2">
+                        <p className="text-xs font-bold text-gray-600">الإحصائية {i + 1}</p>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Field label="الرقم" value={stat.num} onChange={v => updateReviewStat(i, { ...stat, num: v })} placeholder="+1200" />
+                          <Field label="التسمية" value={stat.label} onChange={v => updateReviewStat(i, { ...stat, label: v })} placeholder="طلب مكتمل" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* معاينة إحصائيات التقييمات */}
+                  <div className="rounded-2xl mt-3 p-4 bg-white border-2 border-gray-900">
+                    <p className="text-xs font-semibold text-gray-400 mb-3">معاينة قسم التقييمات</p>
+                    <div className="flex justify-around">
+                      {data.reviewStats.map((stat, i) => (
+                        <div key={i} className="text-center">
+                          <p className="font-black text-base" style={{ color: data.primaryColor }}>{stat.num}</p>
+                          <p className="text-xs text-gray-500 mt-0.5">{stat.label}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </>

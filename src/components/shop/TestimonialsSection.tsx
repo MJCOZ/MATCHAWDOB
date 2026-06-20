@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import { getReviewStats } from "@/lib/settings";
 
 const reviews = [
   {
@@ -33,7 +34,8 @@ const reviews = [
   },
 ];
 
-export function TestimonialsSection() {
+export async function TestimonialsSection() {
+  const stats = await getReviewStats();
   return (
     <section className="container-custom py-10 md:py-16">
 
@@ -109,14 +111,10 @@ export function TestimonialsSection() {
       <div className="mt-6 md:mt-10 text-center">
         <div className="inline-flex items-center gap-3 sm:gap-6 px-5 sm:px-8 py-4 sm:py-5 max-w-full"
           style={{ border: "2px solid #1a1a1a", boxShadow: "4px 4px 0 #B2DE81", borderRadius: "4px", background: "white" }}>
-          {[
-            { label: "عميل سعيد", value: "+500" },
-            { label: "تقييم إيجابي", value: "98%" },
-            { label: "طلب مكتمل", value: "+1200" },
-          ].map(({ label, value }, i) => (
-            <div key={label} className={`text-center ${i > 0 ? "pr-3 sm:pr-6 border-r-2 border-gray-100" : ""}`}>
-              <p className="text-xl sm:text-2xl font-black text-[#261B6D] font-en">{value}</p>
-              <p className="text-[11px] sm:text-xs text-gray-500 mt-0.5 whitespace-nowrap">{label}</p>
+          {stats.map((stat, i) => (
+            <div key={stat.label} className={`text-center ${i > 0 ? "pr-3 sm:pr-6 border-r-2 border-gray-100" : ""}`}>
+              <p className="text-xl sm:text-2xl font-black text-[#261B6D] font-en">{stat.num}</p>
+              <p className="text-[11px] sm:text-xs text-gray-500 mt-0.5 whitespace-nowrap">{stat.label}</p>
             </div>
           ))}
         </div>

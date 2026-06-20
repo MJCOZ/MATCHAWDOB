@@ -6,3 +6,23 @@ export async function getCurrencySymbol(): Promise<string> {
   const setting = await prisma.setting.findUnique({ where: { key: "currency_symbol" } });
   return setting?.value || DEFAULT_CURRENCY_SYMBOL;
 }
+
+export interface ReviewStat { num: string; label: string; }
+
+const DEFAULT_REVIEW_STATS: ReviewStat[] = [
+  { num: "+500", label: "عميل سعيد" },
+  { num: "98%", label: "تقييم إيجابي" },
+  { num: "+1200", label: "طلب مكتمل" },
+];
+
+// إحصائيات إجمالي التقييمات أسفل قسم آراء العملاء — تُحرَّر من مخصص التصميم في لوحة التحكم
+export async function getReviewStats(): Promise<ReviewStat[]> {
+  const setting = await prisma.setting.findUnique({ where: { key: "customizer_data" } });
+  if (!setting) return DEFAULT_REVIEW_STATS;
+  try {
+    const data = JSON.parse(setting.value);
+    return data?.reviewStats?.length === 3 ? data.reviewStats : DEFAULT_REVIEW_STATS;
+  } catch {
+    return DEFAULT_REVIEW_STATS;
+  }
+}
