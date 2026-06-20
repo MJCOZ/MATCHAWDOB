@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { formatPrice, calculateDiscountPercent } from "@/lib/utils";
+import { getCurrencySymbol } from "@/lib/settings";
 
 interface Product {
   id: string; nameAr: string; slug: string;
@@ -8,7 +9,9 @@ interface Product {
   category: { nameAr: string };
 }
 
-export function OffersSection({ products }: { products: Product[] }) {
+export async function OffersSection({ products }: { products: Product[] }) {
+  const currencySymbol = await getCurrencySymbol();
+
   return (
     <section style={{ background: "#261B6D", borderTop: "3px solid #1a1a1a", borderBottom: "3px solid #1a1a1a" }}
       className="py-10 md:py-14 relative overflow-hidden">
@@ -64,8 +67,8 @@ export function OffersSection({ products }: { products: Product[] }) {
                   </p>
                   <h3 className="text-sm font-bold text-[#261B6D] line-clamp-1 mb-2">{product.nameAr}</h3>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-base font-black text-[#261B6D]">{formatPrice(product.salePrice)}</span>
-                    <span className="text-xs text-gray-400 line-through">{formatPrice(product.price)}</span>
+                    <span className="text-base font-black text-[#261B6D]">{formatPrice(product.salePrice, currencySymbol)}</span>
+                    <span className="text-xs text-gray-400 line-through">{formatPrice(product.price, currencySymbol)}</span>
                   </div>
                 </div>
               </Link>

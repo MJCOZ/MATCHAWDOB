@@ -10,10 +10,13 @@ export async function GET() {
     try { data = JSON.parse(customizer.value); } catch { data = {}; }
   }
 
-  // إعدادات الهوية (الشعار / النص أسفله / الاسم) من جدول الإعدادات
-  const brandKeys = ["store_logo", "store_tagline", "store_name", "store_name_ar"];
-  const brand = await prisma.setting.findMany({ where: { key: { in: brandKeys } } });
-  for (const s of brand) {
+  // إعدادات عامة (الهوية، التواصل، العملة) من جدول الإعدادات
+  const publicKeys = [
+    "store_logo", "store_tagline", "store_name", "store_name_ar",
+    "store_phone", "store_email", "store_address", "currency_symbol",
+  ];
+  const settings = await prisma.setting.findMany({ where: { key: { in: publicKeys } } });
+  for (const s of settings) {
     if (s.value) data[s.key] = s.value;
   }
 

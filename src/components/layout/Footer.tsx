@@ -1,8 +1,11 @@
+"use client";
 import Link from "next/link";
 import { Phone, Mail, MapPin, Instagram, Twitter } from "lucide-react";
 import { BrandLogo } from "@/components/brand/BrandLogo";
+import { useStoreSettings } from "@/hooks/useStoreSettings";
 
 export function Footer() {
+  const settings = useStoreSettings();
   const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "966500000000";
 
   return (
@@ -120,9 +123,9 @@ export function Footer() {
             </h3>
             <ul className="space-y-3">
               {[
-                { icon: Phone,  label: "اتصل بنا", value: "920-000-000" },
-                { icon: Mail,   label: "البريد",   value: "hello@matchwdob.sa" },
-                { icon: MapPin, label: "العنوان",  value: "الرياض، المملكة العربية السعودية" },
+                { icon: Phone,  label: "اتصل بنا", value: settings.store_phone || "920-000-000" },
+                { icon: Mail,   label: "البريد",   value: settings.store_email || "hello@matchwdob.sa" },
+                { icon: MapPin, label: "العنوان",  value: settings.store_address || "الرياض، المملكة العربية السعودية" },
               ].map(({ icon: Icon, label, value }) => (
                 <li key={label} className="flex items-start gap-3">
                   <div className="w-9 h-9 flex items-center justify-center flex-shrink-0"

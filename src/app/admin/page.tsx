@@ -1,14 +1,17 @@
 export const dynamic = 'force-dynamic';
 import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
+import { getCurrencySymbol } from "@/lib/settings";
 import { ShoppingBag, Users, Package, TrendingUp, Clock, CheckCircle, AlertCircle } from "lucide-react";
 import Link from "next/link";
 
 export default async function AdminDashboard() {
   const [
+    currencySymbol,
     totalOrders, totalRevenue, totalProducts, totalUsers,
     pendingOrders, recentOrders, lowStockProducts,
   ] = await Promise.all([
+    getCurrencySymbol(),
     prisma.order.count(),
     prisma.order.aggregate({ _sum: { total: true }, where: { paymentStatus: "PAID" } }),
     prisma.product.count({ where: { isActive: true } }),
@@ -37,7 +40,7 @@ export default async function AdminDashboard() {
     },
     {
       title: "إجمالي الإيرادات",
-      value: formatPrice(Number(totalRevenue._sum.total) || 0),
+      value: formatPrice(Number(totalRevenue._sum.total) || 0, currencySymbol),
       icon: TrendingUp,
       color: "bg-[#B2DE81]",
       iconColor: "text-[#261B6D]",
@@ -140,7 +143,7 @@ export default async function AdminDashboard() {
                       <p className="text-xs text-gray-500">{order.user.email}</p>
                     </td>
                     <td className="px-5 py-3">
-                      <p className="text-sm font-bold text-gray-900">{formatPrice(Number(order.total))}</p>
+                      <p className="text-sm font-bold text-gray-900">{formatPrice(Number(order.total), currencySymbol)}</p>
                     </td>
                     <td className="px-5 py-3">
                       <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${statusColors[order.status] || "bg-gray-100 text-gray-600"}`}>

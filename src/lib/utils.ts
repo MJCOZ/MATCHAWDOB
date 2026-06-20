@@ -5,16 +5,17 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// تنسيق العملة السعودية
-export function formatPrice(price: number | string): string {
+// تنسيق السعر — يستخدم رمز العملة من إعدادات المتجر إن توفر
+export const DEFAULT_CURRENCY_SYMBOL = "ر.س";
+
+export function formatPrice(price: number | string, currencySymbol: string = DEFAULT_CURRENCY_SYMBOL): string {
   const num = typeof price === "string" ? parseFloat(price) : price;
-  return new Intl.NumberFormat("ar-SA", {
-    style: "currency",
-    currency: "SAR",
+  const formatted = new Intl.NumberFormat("ar-SA", {
     numberingSystem: "latn",
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(num);
+  return `${formatted} ${currencySymbol || DEFAULT_CURRENCY_SYMBOL}`;
 }
 
 // توليد رقم طلب فريد
