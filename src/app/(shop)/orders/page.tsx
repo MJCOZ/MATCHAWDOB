@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatPrice, translateOrderStatus, formatDate } from "@/lib/utils";
+import { getCurrencySymbol } from "@/lib/settings";
 import Link from "next/link";
 import { Package, ChevronLeft } from "lucide-react";
 import type { Metadata } from "next";
@@ -24,14 +25,17 @@ export default async function OrdersPage() {
   if (!session?.user) redirect("/login?callbackUrl=/orders");
 
   const userId = (session.user as any).id;
-  const orders = await prisma.order.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-    include: {
-      items: { take: 3, select: { productName: true, productImage: true, quantity: true, total: true } },
-      shipping: { select: { trackingNumber: true, status: true, carrier: true } },
-    },
-  });
+  const [currencySymbol, orders] = await Promise.all([
+    getCurrencySymbol(),
+    prisma.order.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      include: {
+        items: { take: 3, select: { productName: true, productImage: true, quantity: true, total: true } },
+        shipping: { select: { trackingNumber: true, status: true, carrier: true } },
+      },
+    }),
+  ]);
 
   return (
     <div className="container-custom py-10 max-w-4xl">
@@ -59,7 +63,7 @@ export default async function OrdersPage() {
                   <p className="text-sm text-gray-500 mt-1">{formatDate(order.createdAt)}</p>
                 </div>
                 <div className="text-left">
-                  <p className="text-xl font-black text-orange-500">{formatPrice(Number(order.total))}</p>
+                  <p className="text-xl font-black text-orange-500">{formatPrice(Number(order.total), currencySymbol)}</p>
                   {order.shipping?.trackingNumber && (
                     <p className="text-xs text-gray-500 mt-0.5">تتبع: {order.shipping.trackingNumber}</p>
                   )}

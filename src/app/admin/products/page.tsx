@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
+import { getCurrencySymbol } from "@/lib/settings";
 import { Plus, Edit, Trash2, Package, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { DeleteProductButton } from "@/components/admin/DeleteProductButton";
@@ -28,7 +29,8 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
   }
   if (searchParams.lowStock === "true") where.stock = { lte: 5 };
 
-  const [products, total, categories] = await Promise.all([
+  const [currencySymbol, products, total, categories] = await Promise.all([
+    getCurrencySymbol(),
     prisma.product.findMany({
       where,
       orderBy: { createdAt: "desc" },
@@ -116,9 +118,9 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                     <span className="text-sm text-gray-600">{product.category.nameAr}</span>
                   </td>
                   <td className="px-5 py-4">
-                    <p className="text-sm font-bold text-gray-900">{formatPrice(Number(product.price))}</p>
+                    <p className="text-sm font-bold text-gray-900">{formatPrice(Number(product.price), currencySymbol)}</p>
                     {product.salePrice && (
-                      <p className="text-xs text-red-500 font-medium">{formatPrice(Number(product.salePrice))}</p>
+                      <p className="text-xs text-red-500 font-medium">{formatPrice(Number(product.salePrice), currencySymbol)}</p>
                     )}
                   </td>
                   <td className="px-5 py-4">

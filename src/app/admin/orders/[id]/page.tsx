@@ -2,22 +2,26 @@ export const dynamic = 'force-dynamic';
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { formatPrice, translateOrderStatus, translatePaymentStatus, formatDate } from "@/lib/utils";
+import { getCurrencySymbol } from "@/lib/settings";
 import Image from "next/image";
 import Link from "next/link";
 import { OrderStatusUpdater } from "@/components/admin/OrderStatusUpdater";
 import { Package, Truck, CreditCard, User, MapPin } from "lucide-react";
 
 export default async function AdminOrderDetailPage({ params }: { params: { id: string } }) {
-  const order = await prisma.order.findUnique({
-    where: { id: params.id },
-    include: {
-      user: { select: { name: true, email: true, phone: true } },
-      items: { include: { product: { select: { slug: true, mainImage: true } } } },
-      payment: true,
-      shipping: true,
-      address: true,
-    },
-  });
+  const [currencySymbol, order] = await Promise.all([
+    getCurrencySymbol(),
+    prisma.order.findUnique({
+      where: { id: params.id },
+      include: {
+        user: { select: { name: true, email: true, phone: true } },
+        items: { include: { product: { select: { slug: true, mainImage: true } } } },
+        payment: true,
+        shipping: true,
+        address: true,
+      },
+    }),
+  ]);
 
   if (!order) notFound();
 
@@ -33,7 +37,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
           <p className="text-gray-500 text-sm mt-0.5">{formatDate(order.createdAt)}</p>
         </div>
         <div className="text-left">
-          <p className="text-2xl font-black text-orange-500">{formatPrice(Number(order.total))}</p>
+          <p className="text-2xl font-black text-orange-500">{formatPrice(Number(order.total), currencySymbol)}</p>
         </div>
       </div>
 
@@ -55,18 +59,18 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-gray-900">{item.productName}</p>
-                    <p className="text-xs text-gray-500">{item.quantity} × {formatPrice(Number(item.price))}</p>
+                    <p className="text-xs text-gray-500">{item.quantity} × {formatPrice(Number(item.price), currencySymbol)}</p>
                   </div>
-                  <p className="text-sm font-bold">{formatPrice(Number(item.total))}</p>
+                  <p className="text-sm font-bold">{formatPrice(Number(item.total), currencySymbol)}</p>
                 </div>
               ))}
             </div>
             <div className="pt-3 border-t border-gray-100 space-y-1 text-sm">
-              <div className="flex justify-between text-gray-600"><span>المجموع</span><span>{formatPrice(Number(order.subtotal))}</span></div>
-              <div className="flex justify-between text-gray-600"><span>الشحن</span><span>{Number(order.shippingCost) === 0 ? "مجاني" : formatPrice(Number(order.shippingCost))}</span></div>
-              <div className="flex justify-between text-gray-600"><span>الضريبة (15%)</span><span>{formatPrice(Number(order.tax))}</span></div>
-              {Number(order.discount) > 0 && <div className="flex justify-between text-green-600"><span>الخصم</span><span>- {formatPrice(Number(order.discount))}</span></div>}
-              <div className="flex justify-between font-black text-base pt-1 border-t"><span>الإجمالي</span><span className="text-orange-500">{formatPrice(Number(order.total))}</span></div>
+              <div className="flex justify-between text-gray-600"><span>المجموع</span><span>{formatPrice(Number(order.subtotal), currencySymbol)}</span></div>
+              <div className="flex justify-between text-gray-600"><span>الشحن</span><span>{Number(order.shippingCost) === 0 ? "مجاني" : formatPrice(Number(order.shippingCost), currencySymbol)}</span></div>
+              <div className="flex justify-between text-gray-600"><span>الضريبة (15%)</span><span>{formatPrice(Number(order.tax), currencySymbol)}</span></div>
+              {Number(order.discount) > 0 && <div className="flex justify-between text-green-600"><span>الخصم</span><span>- {formatPrice(Number(order.discount), currencySymbol)}</span></div>}
+              <div className="flex justify-between font-black text-base pt-1 border-t"><span>الإجمالي</span><span className="text-orange-500">{formatPrice(Number(order.total), currencySymbol)}</span></div>
             </div>
           </div>
 

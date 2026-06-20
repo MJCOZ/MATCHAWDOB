@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useCartStore } from "@/store/cartStore";
 import { formatPrice, getEffectivePrice } from "@/lib/utils";
+import { useStoreSettings } from "@/hooks/useStoreSettings";
 import { useState } from "react";
 import { Tag, X, Check } from "lucide-react";
 import toast from "react-hot-toast";
@@ -18,6 +19,7 @@ interface OrderSummaryProps {
 
 export function OrderSummary({ items, subtotal, discount, shipping, tax, total, coupon }: OrderSummaryProps) {
   const { applyCoupon, removeCoupon } = useCartStore();
+  const { currency_symbol } = useStoreSettings();
   const [couponInput, setCouponInput] = useState("");
   const [isApplying, setIsApplying] = useState(false);
 
@@ -33,7 +35,7 @@ export function OrderSummary({ items, subtotal, discount, shipping, tax, total, 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "كوبون غير صالح");
       applyCoupon(data.code, data.value, data.type);
-      toast.success(`تم تطبيق الكوبون! خصم ${data.type === "PERCENTAGE" ? data.value + "%" : formatPrice(data.value)}`);
+      toast.success(`تم تطبيق الكوبون! خصم ${data.type === "PERCENTAGE" ? data.value + "%" : formatPrice(data.value, currency_symbol)}`);
       setCouponInput("");
     } catch (err: any) {
       toast.error(err.message);
@@ -63,7 +65,7 @@ export function OrderSummary({ items, subtotal, discount, shipping, tax, total, 
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-gray-900 truncate">{product.nameAr}</p>
               <p className="text-xs text-orange-500 font-bold mt-0.5">
-                {formatPrice(getEffectivePrice(product.price, product.salePrice) * quantity)}
+                {formatPrice(getEffectivePrice(product.price, product.salePrice) * quantity, currency_symbol)}
               </p>
             </div>
           </div>
@@ -98,7 +100,7 @@ export function OrderSummary({ items, subtotal, discount, shipping, tax, total, 
             <Check size={16} className="text-green-600" />
             <div>
               <p className="text-xs font-bold text-green-700">{coupon.code}</p>
-              <p className="text-xs text-green-600">- {formatPrice(discount)}</p>
+              <p className="text-xs text-green-600">- {formatPrice(discount, currency_symbol)}</p>
             </div>
           </div>
           <button onClick={removeCoupon} className="text-gray-400 hover:text-red-500 transition-colors">
@@ -111,25 +113,25 @@ export function OrderSummary({ items, subtotal, discount, shipping, tax, total, 
       <div className="border-t border-gray-100 pt-4 space-y-2">
         <div className="flex justify-between text-sm text-gray-600">
           <span>المجموع الفرعي</span>
-          <span>{formatPrice(subtotal)}</span>
+          <span>{formatPrice(subtotal, currency_symbol)}</span>
         </div>
         <div className="flex justify-between text-sm text-gray-600">
           <span>الشحن</span>
-          <span className={shipping === 0 ? "text-green-600 font-medium" : ""}>{shipping === 0 ? "مجاني 🎁" : formatPrice(shipping)}</span>
+          <span className={shipping === 0 ? "text-green-600 font-medium" : ""}>{shipping === 0 ? "مجاني 🎁" : formatPrice(shipping, currency_symbol)}</span>
         </div>
         <div className="flex justify-between text-sm text-gray-600">
           <span>ضريبة القيمة المضافة (15%)</span>
-          <span>{formatPrice(tax)}</span>
+          <span>{formatPrice(tax, currency_symbol)}</span>
         </div>
         {discount > 0 && (
           <div className="flex justify-between text-sm text-green-600">
             <span>الخصم</span>
-            <span>- {formatPrice(discount)}</span>
+            <span>- {formatPrice(discount, currency_symbol)}</span>
           </div>
         )}
         <div className="flex justify-between text-lg font-black text-gray-900 pt-3 border-t border-gray-200">
           <span>الإجمالي</span>
-          <span className="text-orange-500">{formatPrice(total)}</span>
+          <span className="text-orange-500">{formatPrice(total, currency_symbol)}</span>
         </div>
       </div>
 

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ShoppingCart, Plus, Minus, Star, Share2, Shield, Truck, RefreshCw, Package } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { formatPrice, calculateDiscountPercent, getEffectivePrice } from "@/lib/utils";
+import { useStoreSettings } from "@/hooks/useStoreSettings";
 import { ProductCard } from "./ProductCard";
 import toast from "react-hot-toast";
 
@@ -25,6 +26,7 @@ export function ProductDetail({ product, related }: ProductDetailProps) {
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const { addItem, openCart } = useCartStore();
+  const { currency_symbol } = useStoreSettings();
 
   const allImages = product.mainImage
     ? [product.mainImage, ...product.images.filter((i) => i !== product.mainImage)]
@@ -114,15 +116,15 @@ export function ProductDetail({ product, related }: ProductDetailProps) {
           <div className="bg-orange-50 rounded-2xl p-5 mb-6">
             <div className="flex items-baseline gap-3">
               <span className="text-4xl font-black text-orange-500">
-                {formatPrice(effectivePrice)}
+                {formatPrice(effectivePrice, currency_symbol)}
               </span>
               {hasSale && (
-                <span className="text-xl text-gray-400 line-through">{formatPrice(product.price)}</span>
+                <span className="text-xl text-gray-400 line-through">{formatPrice(product.price, currency_symbol)}</span>
               )}
             </div>
             {discountPercent > 0 && (
               <p className="text-sm text-green-600 font-semibold mt-1">
-                💰 توفر {formatPrice(product.price - effectivePrice)} ({discountPercent}% خصم)
+                💰 توفر {formatPrice(product.price - effectivePrice, currency_symbol)} ({discountPercent}% خصم)
               </p>
             )}
             <p className="text-xs text-gray-500 mt-1">السعر شامل ضريبة القيمة المضافة 15%</p>

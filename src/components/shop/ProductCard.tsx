@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ShoppingCart, Heart, Star } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { formatPrice, calculateDiscountPercent, getEffectivePrice } from "@/lib/utils";
+import { useStoreSettings } from "@/hooks/useStoreSettings";
 import toast from "react-hot-toast";
 
 interface ProductCardProps {
@@ -26,6 +27,7 @@ export function ProductCard({
   stock, isFeatured, isNew, categoryName, rating, reviewCount
 }: ProductCardProps) {
   const { addItem, openCart } = useCartStore();
+  const { currency_symbol } = useStoreSettings();
   const displayPrice      = getEffectivePrice(price, salePrice);
   const hasSale           = displayPrice < price;
   const discountPercent   = calculateDiscountPercent(price, displayPrice);
@@ -124,9 +126,9 @@ export function ProductCard({
         {/* السعر */}
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-2">
-            <span className="text-lg font-black text-[#261B6D]">{formatPrice(displayPrice)}</span>
+            <span className="text-lg font-black text-[#261B6D]">{formatPrice(displayPrice, currency_symbol)}</span>
             {hasSale && (
-              <span className="text-sm text-gray-400 line-through">{formatPrice(price)}</span>
+              <span className="text-sm text-gray-400 line-through">{formatPrice(price, currency_symbol)}</span>
             )}
           </div>
           {stock > 0 && stock <= 5 && (

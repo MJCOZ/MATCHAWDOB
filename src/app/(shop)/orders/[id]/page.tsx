@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatPrice, translateOrderStatus, translatePaymentStatus, formatDate } from "@/lib/utils";
+import { getCurrencySymbol } from "@/lib/settings";
 import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle, Package, Truck, MapPin, CreditCard, AlertCircle } from "lucide-react";
@@ -23,15 +24,18 @@ export default async function OrderDetailPage({ params, searchParams }: Props) {
   const userId = (session.user as any).id;
   const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes((session.user as any).role);
 
-  const order = await prisma.order.findFirst({
-    where: { id: params.id, ...(isAdmin ? {} : { userId }) },
-    include: {
-      items: { include: { product: { select: { slug: true } } } },
-      payment: true,
-      shipping: true,
-      address: true,
-    },
-  });
+  const [currencySymbol, order] = await Promise.all([
+    getCurrencySymbol(),
+    prisma.order.findFirst({
+      where: { id: params.id, ...(isAdmin ? {} : { userId }) },
+      include: {
+        items: { include: { product: { select: { slug: true } } } },
+        payment: true,
+        shipping: true,
+        address: true,
+      },
+    }),
+  ]);
 
   if (!order) notFound();
 
@@ -141,9 +145,9 @@ export default async function OrderDetailPage({ params, searchParams }: Props) {
                     <Link href={`/products/${item.product?.slug || ""}`} className="text-sm font-semibold text-gray-900 hover:text-orange-500">
                       {item.productName}
                     </Link>
-                    <p className="text-sm text-gray-500 mt-0.5">الكمية: {item.quantity} × {formatPrice(Number(item.price))}</p>
+                    <p className="text-sm text-gray-500 mt-0.5">الكمية: {item.quantity} × {formatPrice(Number(item.price), currencySymbol)}</p>
                   </div>
-                  <p className="text-sm font-bold text-gray-900">{formatPrice(Number(item.total))}</p>
+                  <p className="text-sm font-bold text-gray-900">{formatPrice(Number(item.total), currencySymbol)}</p>
                 </div>
               ))}
             </div>
@@ -155,13 +159,13 @@ export default async function OrderDetailPage({ params, searchParams }: Props) {
           <div className="bg-white rounded-2xl border border-gray-100 p-5">
             <h2 className="font-bold text-gray-900 mb-4">ملخص الطلب</h2>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between text-gray-600"><span>المجموع الفرعي</span><span>{formatPrice(Number(order.subtotal))}</span></div>
-              <div className="flex justify-between text-gray-600"><span>الشحن</span><span>{Number(order.shippingCost) === 0 ? "مجاني" : formatPrice(Number(order.shippingCost))}</span></div>
-              <div className="flex justify-between text-gray-600"><span>ضريبة القيمة المضافة</span><span>{formatPrice(Number(order.tax))}</span></div>
-              {Number(order.discount) > 0 && <div className="flex justify-between text-green-600"><span>الخصم</span><span>- {formatPrice(Number(order.discount))}</span></div>}
+              <div className="flex justify-between text-gray-600"><span>المجموع الفرعي</span><span>{formatPrice(Number(order.subtotal), currencySymbol)}</span></div>
+              <div className="flex justify-between text-gray-600"><span>الشحن</span><span>{Number(order.shippingCost) === 0 ? "مجاني" : formatPrice(Number(order.shippingCost), currencySymbol)}</span></div>
+              <div className="flex justify-between text-gray-600"><span>ضريبة القيمة المضافة</span><span>{formatPrice(Number(order.tax), currencySymbol)}</span></div>
+              {Number(order.discount) > 0 && <div className="flex justify-between text-green-600"><span>الخصم</span><span>- {formatPrice(Number(order.discount), currencySymbol)}</span></div>}
               <div className="flex justify-between text-lg font-black text-gray-900 pt-2 border-t border-gray-100">
                 <span>الإجمالي</span>
-                <span className="text-orange-500">{formatPrice(Number(order.total))}</span>
+                <span className="text-orange-500">{formatPrice(Number(order.total), currencySymbol)}</span>
               </div>
             </div>
           </div>

@@ -4,12 +4,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCartStore } from "@/store/cartStore";
 import { formatPrice, getEffectivePrice } from "@/lib/utils";
+import { useStoreSettings } from "@/hooks/useStoreSettings";
 
 export function CartDrawer() {
   const {
     items, isOpen, closeCart, removeItem, updateQuantity,
     getSubtotal, getDiscount, getShipping, getTotal, coupon
   } = useCartStore();
+  const { currency_symbol } = useStoreSettings();
 
   const subtotal = getSubtotal();
   const discount = getDiscount();
@@ -80,7 +82,7 @@ export function CartDrawer() {
                     {/* تفاصيل المنتج */}
                     <div className="flex-1 min-w-0">
                       <h4 className="text-sm font-semibold text-gray-900 truncate mb-1">{product.nameAr}</h4>
-                      <p className="text-[#261B6D] font-bold text-sm">{formatPrice(price)}</p>
+                      <p className="text-[#261B6D] font-bold text-sm">{formatPrice(price, currency_symbol)}</p>
 
                       {/* التحكم في الكمية */}
                       <div className="flex items-center gap-2 mt-2">
@@ -118,38 +120,38 @@ export function CartDrawer() {
               {coupon && (
                 <div className="bg-[#B2DE81]/20 border border-[#B2DE81]/40 rounded-xl px-3 py-2 flex items-center justify-between">
                   <span className="text-[#261B6D] text-xs font-bold">✦ كوبون: {coupon.code}</span>
-                  <span className="text-[#261B6D] text-xs font-bold">- {formatPrice(discount)}</span>
+                  <span className="text-[#261B6D] text-xs font-bold">- {formatPrice(discount, currency_symbol)}</span>
                 </div>
               )}
               <div className="flex justify-between text-sm text-gray-600">
                 <span>المجموع الفرعي</span>
-                <span>{formatPrice(subtotal)}</span>
+                <span>{formatPrice(subtotal, currency_symbol)}</span>
               </div>
               <div className="flex justify-between text-sm text-gray-600">
                 <span>الشحن</span>
                 <span className={shipping === 0 ? "text-[#261B6D] font-bold" : ""}>
-                  {shipping === 0 ? "مجاني ✦" : formatPrice(shipping)}
+                  {shipping === 0 ? "مجاني ✦" : formatPrice(shipping, currency_symbol)}
                 </span>
               </div>
               <div className="flex justify-between text-sm text-gray-600">
                 <span>ضريبة القيمة المضافة (15%)</span>
-                <span>{formatPrice(tax)}</span>
+                <span>{formatPrice(tax, currency_symbol)}</span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-sm text-green-600 font-medium">
                   <span>الخصم</span>
-                  <span>- {formatPrice(discount)}</span>
+                  <span>- {formatPrice(discount, currency_symbol)}</span>
                 </div>
               )}
               <div className="flex justify-between text-lg font-black text-[#261B6D] pt-2 border-t-2 border-[#eeedf8]">
                 <span>الإجمالي</span>
-                <span>{formatPrice(total)}</span>
+                <span>{formatPrice(total, currency_symbol)}</span>
               </div>
 
               {subtotal < 200 && (
                 <div className="bg-[#B2DE81]/15 border border-[#B2DE81]/30 rounded-xl py-2 px-3 text-center">
                   <p className="text-xs text-[#261B6D] font-medium">
-                    أضف <span className="font-bold">{formatPrice(200 - subtotal)}</span> للحصول على شحن مجاني ✦
+                    أضف <span className="font-bold">{formatPrice(200 - subtotal, currency_symbol)}</span> للحصول على شحن مجاني ✦
                   </p>
                   <div className="mt-1.5 h-1.5 bg-[#eeedf8] rounded-full overflow-hidden">
                     <div

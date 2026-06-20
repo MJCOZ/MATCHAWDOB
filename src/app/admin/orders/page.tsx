@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { prisma } from "@/lib/prisma";
 import { formatPrice, translateOrderStatus, formatDate } from "@/lib/utils";
+import { getCurrencySymbol } from "@/lib/settings";
 import Link from "next/link";
 import { Package } from "lucide-react";
 
@@ -34,7 +35,8 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
     ];
   }
 
-  const [orders, total] = await Promise.all([
+  const [currencySymbol, orders, total] = await Promise.all([
+    getCurrencySymbol(),
     prisma.order.findMany({
       where,
       orderBy: { createdAt: "desc" },
@@ -109,7 +111,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
                     </p>
                   </td>
                   <td className="px-4 py-3.5">
-                    <p className="text-sm font-bold text-gray-900">{formatPrice(Number(order.total))}</p>
+                    <p className="text-sm font-bold text-gray-900">{formatPrice(Number(order.total), currencySymbol)}</p>
                     <p className="text-xs text-gray-500">{order.paymentMethod === "cod" ? "عند الاستلام" : "إلكتروني"}</p>
                   </td>
                   <td className="px-4 py-3.5">
